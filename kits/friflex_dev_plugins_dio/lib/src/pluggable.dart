@@ -12,10 +12,10 @@ import 'widgets/icon.dart' as icon;
 import 'widgets/pluggable_state.dart';
 
 // TODO(Alex): Implement [PluggableStream] for dot features.
-/// Implement a [Pluggable] to integrate with UME.
+/// Implement a [Pluggable] to integrate with Friflex dev plugins.
 class DioInspector extends StatefulWidget implements Pluggable {
   DioInspector({Key? key, required this.dio}) : super(key: key) {
-    dio.interceptors.add(UMEDioInterceptor());
+    dio.interceptors.add(FdpDioInterceptor());
   }
 
   final Dio dio;

@@ -58,7 +58,7 @@ _FriflexDevPluginsOverlayState? _fdpWidgetState;
 
 class _FriflexDevPluginsOverlayState extends State<FriflexDevPluginsOverlay> {
   _FriflexDevPluginsOverlayState() {
-    // Make sure only a single `UMEWidget` is being used.
+    // Make sure only a single `FriflexDevPluginsOverlay` is being used.
     assert(
       _fdpWidgetState == null,
       'Only one `FriflexDevPluginsOverlay` can be used at the same time.',
@@ -423,7 +423,7 @@ class _ContentPageState extends State<_ContentPage> {
             left: _dx,
             top: _dy,
             child: Tooltip(
-              message: 'Open ume panel',
+              message: 'Open dev plugins panel',
               child: RepaintBoundary(
                 child: GestureDetector(
                   onTap: onTap,

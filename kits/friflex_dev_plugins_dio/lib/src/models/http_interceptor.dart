@@ -12,7 +12,7 @@ int get _timestamp => DateTime.now().millisecondsSinceEpoch;
 ///  - Add [DIO_EXTRA_START_TIME] when a request was requested.
 ///  - Add [DIO_EXTRA_END_TIME] when a response is respond or thrown an error.
 ///  - Deliver the [Response] to the container.
-class UMEDioInterceptor extends Interceptor {
+class FdpDioInterceptor extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     options.extra[DIO_EXTRA_START_TIME] = _timestamp;

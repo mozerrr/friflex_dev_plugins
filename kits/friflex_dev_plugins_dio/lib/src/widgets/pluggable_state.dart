@@ -180,14 +180,14 @@ class _ResponseCard extends StatefulWidget {
 class _ResponseCardState extends State<_ResponseCard> {
   final ValueNotifier<bool> _isExpanded = ValueNotifier<bool>(false);
 
+  void _switchExpand() {
+    _isExpanded.value = !_isExpanded.value;
+  }
+
   @override
   void dispose() {
     _isExpanded.dispose();
     super.dispose();
-  }
-
-  void _switchExpand() {
-    _isExpanded.value = !_isExpanded.value;
   }
 
   Response<dynamic> get _response => widget.response;

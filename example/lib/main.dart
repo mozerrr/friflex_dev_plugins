@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:example/custom_router_pluggable.dart';
 import 'package:example/detail_page.dart';
 import 'package:example/home_page.dart';
-import 'package:example/ume_switch.dart';
+import 'package:example/fdp_switch.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:friflex_dev_plugins/friflex_dev_plugins.dart';
@@ -72,10 +72,10 @@ class _UMEAppState extends State<UMEApp> {
     if (kDebugMode) {
       return MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (_) => UMESwitch()),
+          ChangeNotifierProvider(create: (_) => FdpSwitch()),
         ],
         builder: (BuildContext context, _) => FriflexDevPluginsOverlay(
-          enable: context.watch<UMESwitch>().enable,
+          enable: context.watch<FdpSwitch>().enable,
           child: body,
         ),
       );

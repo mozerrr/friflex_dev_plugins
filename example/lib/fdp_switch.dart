@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-class UMESwitch with ChangeNotifier {
+class FdpSwitch with ChangeNotifier {
   bool _enable = true;
   bool get enable => _enable;
 

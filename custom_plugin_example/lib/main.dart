@@ -14,11 +14,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'UME Demo',
+      title: 'Friflex dev plugins Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'UME Demo Home Page'),
+      home: const MyHomePage(title: 'Friflex dev plugins Demo Home Page'),
     );
   }
 }
