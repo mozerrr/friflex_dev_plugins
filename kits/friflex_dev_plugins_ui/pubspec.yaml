@@ -10,7 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  friflex_dev_plugins: ^1.0.0
+  friflex_dev_plugins: '>1.0.0-beta <1.0.0'
   cyclop: ^0.6.2
   quiver: ^3.2.1
   basics: ">=0.6.0 <0.11.0"
@@ -18,7 +18,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  mockito: ^5.4.0
+  mockito: ^5.3.2
   flutter_coverage_badge:
     git:
       url: https://github.com/smileShirely/flutter_coverage_badge.git

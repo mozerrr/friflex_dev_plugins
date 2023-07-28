@@ -10,7 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  friflex_dev_plugins: ^1.0.0
+  friflex_dev_plugins: '>1.0.0-beta <1.0.0'
   rxdart: ^0.27.5
 
 dev_dependencies:
