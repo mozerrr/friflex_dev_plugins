@@ -31,6 +31,7 @@ const double _toolBarHeight = 32;
 
 class _FloatingWidgetState extends State<FloatingWidget> with StoreMixin {
   late Size _windowSize;
+  bool _wasInitialized = false;
   double _dy = 0;
   bool _fullScreen = false;
 
@@ -42,7 +43,6 @@ class _FloatingWidgetState extends State<FloatingWidget> with StoreMixin {
   @override
   void initState() {
     super.initState();
-    _windowSize = windowSize(context);
     fetchWithKey('floating_widget').then((value) {
       if (value != null) {
         setState(() {
@@ -50,23 +50,33 @@ class _FloatingWidgetState extends State<FloatingWidget> with StoreMixin {
         });
       }
     });
-    _dy = _windowSize.height -
-        widget.minimalHeight -
-        _dragBarHeight -
-        toolBarHeight;
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _windowSize = windowSize(context);
+    if (!_wasInitialized) {
+      _dy = _windowSize.height -
+          widget.minimalHeight -
+          _dragBarHeight -
+          toolBarHeight;
+      _wasInitialized = true;
+    }
   }
 
   void _dragEvent(DragUpdateDetails details) {
-    _dy += details.delta.dy;
-    _dy = min(
-        max(0, _dy),
-        MediaQuery.of(context).size.height -
-            widget.minimalHeight -
-            _dragBarHeight -
-            toolBarHeight -
-            MediaQuery.of(context).padding.top -
-            MediaQuery.of(context).padding.bottom);
-    setState(() {});
+    setState(() {
+      _dy += details.delta.dy;
+      _dy = min(
+          max(0, _dy),
+          MediaQuery.of(context).size.height -
+              widget.minimalHeight -
+              _dragBarHeight -
+              toolBarHeight -
+              MediaQuery.of(context).padding.top -
+              MediaQuery.of(context).padding.bottom);
+    });
   }
 
   void _dragEnd(DragEndDetails details) async {
@@ -134,8 +144,8 @@ class _ToolBarContent extends StatefulWidget {
 }
 
 class __ToolBarContentState extends State<_ToolBarContent> {
-  bool _fullScreen = false;
   late Size _windowSize;
+  bool _fullScreen = false;
 
   double get toolBarHeight =>
       (widget.toolbarActions != null && widget.toolbarActions!.isNotEmpty)
@@ -143,15 +153,23 @@ class __ToolBarContentState extends State<_ToolBarContent> {
           : 0;
 
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     _windowSize = windowSize(context);
+  }
+
+  _dragCallback(DragUpdateDetails details) {
+    if (widget.dragCallback != null) widget.dragCallback!(details);
+  }
+
+  _dragEnd(DragEndDetails details) {
+    if (widget.dragEnd != null) widget.dragEnd!(details);
   }
 
   @override
   Widget build(BuildContext context) {
     if (_windowSize.isEmpty) {
-      _windowSize = MediaQuery.of(context).size;
+      _windowSize = MediaQuery.sizeOf(context);
     }
     const cornerRadius = Radius.circular(10);
     return SafeArea(
@@ -169,7 +187,7 @@ class __ToolBarContentState extends State<_ToolBarContent> {
             ),
             color: Color(0xffd0d0d0),
           ),
-          width: MediaQuery.of(context).size.width,
+          width: MediaQuery.sizeOf(context).width,
           height: _fullScreen
               ? _windowSize.height
               : widget.minimalHeight + _dragBarHeight + toolBarHeight,
@@ -182,9 +200,7 @@ class __ToolBarContentState extends State<_ToolBarContent> {
                   children: [
                     InkWell(
                       onTap: () {
-                        if (widget.closeAction != null) {
-                          widget.closeAction!();
-                        }
+                        widget.closeAction?.call();
                       },
                       child: const CircleAvatar(
                         radius: 10,
@@ -194,9 +210,7 @@ class __ToolBarContentState extends State<_ToolBarContent> {
                     const SizedBox(width: 8),
                     InkWell(
                       onTap: () {
-                        if (widget.maximalAction != null) {
-                          widget.maximalAction!();
-                        }
+                        widget.maximalAction?.call();
                         setState(() {
                           _fullScreen = !_fullScreen;
                         });
@@ -212,7 +226,7 @@ class __ToolBarContentState extends State<_ToolBarContent> {
                       child: GestureDetector(
                         onVerticalDragUpdate: (details) =>
                             _dragCallback(details),
-                        onVerticalDragEnd: (details) => _dragEnd(details),
+                        onVerticalDragEnd: _dragEnd,
                         child: Container(
                           height: _dragBarHeight,
                           color: const Color(0xffd0d0d0),
@@ -220,9 +234,10 @@ class __ToolBarContentState extends State<_ToolBarContent> {
                             child: Text(
                               'UME',
                               style: TextStyle(
-                                  color: Color(0xff575757),
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600),
+                                color: Color(0xff575757),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ),
                         ),
@@ -276,13 +291,5 @@ class __ToolBarContentState extends State<_ToolBarContent> {
         ),
       ),
     );
-  }
-
-  _dragCallback(DragUpdateDetails details) {
-    if (widget.dragCallback != null) widget.dragCallback!(details);
-  }
-
-  _dragEnd(DragEndDetails details) {
-    if (widget.dragEnd != null) widget.dragEnd!(details);
   }
 }

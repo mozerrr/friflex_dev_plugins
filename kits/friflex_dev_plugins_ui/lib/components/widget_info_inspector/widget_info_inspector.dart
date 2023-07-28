@@ -119,8 +119,8 @@ class _DebugPaintButtonState extends State<_DebugPaintButton> {
   late double _dy;
 
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     _dx = windowSize(context).width - dotSize.width - margin * 2;
     _dy = windowSize(context).width - dotSize.width - bottomDistance;
   }
@@ -146,7 +146,6 @@ class _DebugPaintButtonState extends State<_DebugPaintButton> {
 
   @override
   void dispose() {
-    super.dispose();
     debugPaintSizeEnabled = false;
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       late RenderObjectVisitor visitor;
@@ -156,6 +155,7 @@ class _DebugPaintButtonState extends State<_DebugPaintButton> {
       };
       RendererBinding.instance.renderView.visitChildren(visitor);
     });
+    super.dispose();
   }
 
   @override

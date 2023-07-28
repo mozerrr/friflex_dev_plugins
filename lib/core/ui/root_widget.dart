@@ -80,7 +80,6 @@ class _UMEWidgetState extends State<UMEWidget> {
   @override
   void initState() {
     super.initState();
-    _replaceChild();
     _injectOverlay();
 
     _onMetricsChanged = PlatformDispatcher.instance.onMetricsChanged;
@@ -94,13 +93,9 @@ class _UMEWidgetState extends State<UMEWidget> {
   }
 
   @override
-  void dispose() {
-    if (_onMetricsChanged != null) {
-      PlatformDispatcher.instance.onMetricsChanged = _onMetricsChanged;
-    }
-    super.dispose();
-    // Do the cleaning at last.
-    _umeWidgetState = null;
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _replaceChild();
   }
 
   @override
@@ -118,6 +113,16 @@ class _UMEWidgetState extends State<UMEWidget> {
     if (!widget.enable) {
       _removeOverlay();
     }
+  }
+
+  @override
+  void dispose() {
+    if (_onMetricsChanged != null) {
+      PlatformDispatcher.instance.onMetricsChanged = _onMetricsChanged;
+    }
+    super.dispose();
+    // Do the cleaning at last.
+    _umeWidgetState = null;
   }
 
   void _replaceChild() {
@@ -221,7 +226,6 @@ class _ContentPageState extends State<_ContentPage> {
   @override
   void initState() {
     super.initState();
-    _windowSize = windowSize(context);
     _storeManager.fetchFloatingDotPos().then((value) {
       if (value == null || value.split(',').length != 2) {
         return;
@@ -242,8 +246,6 @@ class _ContentPageState extends State<_ContentPage> {
         _minimalContent = value ?? true;
       });
     });
-    _dx = _windowSize.width - dotSize.width - margin * 4;
-    _dy = _windowSize.height - dotSize.height - bottomDistance;
     itemTapAction(pluginData) async {
       if (pluginData is PluggableWithAnywhereDoor) {
         dynamic result;
@@ -293,6 +295,15 @@ class _ContentPageState extends State<_ContentPage> {
       },
     );
     _currentWidget = const SizedBox.shrink();
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    _windowSize = windowSize(context);
+    _dx = _windowSize.width - dotSize.width - margin * 4;
+    _dy = _windowSize.height - dotSize.height - bottomDistance;
   }
 
   void dragEvent(DragUpdateDetails details) {

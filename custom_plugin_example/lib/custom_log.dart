@@ -37,20 +37,16 @@ class CustomLog implements Pluggable {
     return Align(
       alignment: Alignment.bottomCenter,
       child: SizedBox(
-          height: MediaQuery.of(context).size.height * 0.5,
-          child: const LogViewerPage()),
+        height: MediaQuery.of(context).size.height * 0.5,
+        child: const LogViewerPage(),
+      ),
     );
   }
 }
 
-class LogViewerPage extends StatefulWidget {
-  const LogViewerPage({Key? key}) : super(key: key);
+class LogViewerPage extends StatelessWidget {
+  const LogViewerPage({super.key});
 
-  @override
-  _LogViewerPageState createState() => _LogViewerPageState();
-}
-
-class _LogViewerPageState extends State<LogViewerPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

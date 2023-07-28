@@ -43,12 +43,17 @@ class _AlignRulerState extends State<AlignRuler> {
   @override
   void initState() {
     super.initState();
-    _windowSize = windowSize(context);
-    _dotPosition = _windowSize.center(Offset.zero);
     _radius = BorderRadius.circular(_dotSize.longestSide);
     _dotOffset = _dotSize.center(Offset.zero);
     _textSize = _getTextSize();
     _selection.clear();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _windowSize = windowSize(context);
+    _dotPosition = _windowSize.center(Offset.zero);
   }
 
   void _onPanUpdate(DragUpdateDetails dragDetails) {

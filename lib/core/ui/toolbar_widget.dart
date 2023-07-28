@@ -1,4 +1,4 @@
-// ignore_for_file: library_private_types_in_public_api
+// ignore_for_file: library_private_types_in_public_api, unused_element
 import 'dart:async';
 import 'dart:math';
 
@@ -29,24 +29,25 @@ const double _dragBarHeight = 32;
 const double _minimalHeight = 80;
 
 class _ToolBarWidgetState extends State<ToolBarWidget> {
-  double _dy = 0;
   late final double _maxDy;
+  double _dy = 0;
 
   @override
-  void initState() {
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     final bottomPadding = View.of(context).padding.bottom / ratio(context);
     _maxDy = windowSize(context).height -
         _minimalHeight -
         _dragBarHeight -
         bottomPadding;
     _dy = _maxDy;
-    super.initState();
   }
 
   void _dragEvent(DragUpdateDetails details) {
-    _dy += details.delta.dy;
-    _dy = min(max(0, _dy), _maxDy);
-    setState(() {});
+    setState(() {
+      _dy += details.delta.dy;
+      _dy = min(max(0, _dy), _maxDy);
+    });
   }
 
   @override
@@ -65,13 +66,13 @@ class _ToolBarWidgetState extends State<ToolBarWidget> {
 }
 
 class _ToolBarContent extends StatefulWidget {
-  const _ToolBarContent(
-      {Key? key,
-      this.action,
-      this.dragCallback,
-      this.maximalAction,
-      this.closeAction})
-      : super(key: key);
+  const _ToolBarContent({
+    super.key,
+    this.action,
+    this.dragCallback,
+    this.maximalAction,
+    this.closeAction,
+  });
 
   final MenuAction? action;
   final Function? dragCallback;
@@ -91,6 +92,45 @@ class __ToolBarContentState extends State<_ToolBarContent> {
   void initState() {
     super.initState();
     _handleData();
+  }
+
+  _dragCallback(DragUpdateDetails details) {
+    if (widget.dragCallback != null) widget.dragCallback!(details);
+  }
+
+  Future<void> _handleData() async {
+    List<Pluggable?> dataList = [];
+    List<String>? list = await _storeManager.fetchStorePlugins();
+    if (!mounted) return;
+    if (list == null || list.isEmpty) {
+      dataList = PluginManager.instance.pluginsMap.values.toList();
+    } else {
+      for (final f in list) {
+        bool contain = PluginManager.instance.pluginsMap.containsKey(f);
+        if (contain) {
+          dataList.add(PluginManager.instance.pluginsMap[f]);
+        }
+      }
+      for (final key in PluginManager.instance.pluginsMap.keys) {
+        if (!list.contains(key)) {
+          dataList.add(PluginManager.instance.pluginsMap[key]);
+        }
+      }
+    }
+    _saveData(dataList);
+    setState(() {
+      _dataList = dataList;
+    });
+  }
+
+  Future<void> _saveData(List<Pluggable?> data) async {
+    List l = data.map((f) => f!.name).toList();
+    if (l.isEmpty) {
+      return;
+    }
+    await Future.delayed(const Duration(milliseconds: 500), () {
+      _storeManager.storePlugins(l as List<String>);
+    });
   }
 
   @override
@@ -168,45 +208,6 @@ class __ToolBarContentState extends State<_ToolBarContent> {
       ),
     );
   }
-
-  _dragCallback(DragUpdateDetails details) {
-    if (widget.dragCallback != null) widget.dragCallback!(details);
-  }
-
-  Future<void> _handleData() async {
-    List<Pluggable?> dataList = [];
-    List<String>? list = await _storeManager.fetchStorePlugins();
-    if (!mounted) return;
-    if (list == null || list.isEmpty) {
-      dataList = PluginManager.instance.pluginsMap.values.toList();
-    } else {
-      for (final f in list) {
-        bool contain = PluginManager.instance.pluginsMap.containsKey(f);
-        if (contain) {
-          dataList.add(PluginManager.instance.pluginsMap[f]);
-        }
-      }
-      for (final key in PluginManager.instance.pluginsMap.keys) {
-        if (!list.contains(key)) {
-          dataList.add(PluginManager.instance.pluginsMap[key]);
-        }
-      }
-    }
-    _saveData(dataList);
-    setState(() {
-      _dataList = dataList;
-    });
-  }
-
-  Future<void> _saveData(List<Pluggable?> data) async {
-    List l = data.map((f) => f!.name).toList();
-    if (l.isEmpty) {
-      return;
-    }
-    await Future.delayed(const Duration(milliseconds: 500), () {
-      _storeManager.storePlugins(l as List<String>);
-    });
-  }
 }
 
 class _PluginScrollContainer extends StatelessWidget {
@@ -234,7 +235,7 @@ class _PluginScrollContainer extends StatelessWidget {
 }
 
 class _MenuCell extends StatelessWidget {
-  const _MenuCell({Key? key, this.pluginData, this.action}) : super(key: key);
+  const _MenuCell({super.key, this.pluginData, this.action});
 
   final Pluggable? pluginData;
   final MenuAction? action;
@@ -244,9 +245,7 @@ class _MenuCell extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         PluggableMessageService().resetCounter(pluginData!);
-        if (action != null) {
-          action!(pluginData);
-        }
+        action?.call(pluginData);
       },
       child: Stack(
         children: [
