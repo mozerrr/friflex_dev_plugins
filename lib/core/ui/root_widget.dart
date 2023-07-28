@@ -299,7 +299,6 @@ class _ContentPageState extends State<_ContentPage> {
 
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
     _windowSize = windowSize(context);
     _dx = _windowSize.width - dotSize.width - margin * 4;
@@ -370,28 +369,33 @@ class _ContentPageState extends State<_ContentPage> {
   }
 
   Widget _logoWidget() {
+    Widget child;
+
     if (_currentSelected != null) {
-      return SizedBox(
+      child = SizedBox(
         height: 30,
         width: 30,
         child: Image(image: _currentSelected!.iconImageProvider),
       );
+    } else {
+      child = SizedBox(
+        height: 30,
+        width: 30,
+        child: ShaderMask(
+          shaderCallback: (Rect bounds) {
+            return const RadialGradient(
+              center: Alignment.topLeft,
+              radius: 1.0,
+              colors: [Colors.yellow, Colors.red],
+              tileMode: TileMode.mirror,
+            ).createShader(bounds);
+          },
+          child: const FlutterLogo(),
+        ),
+      );
     }
-    return SizedBox(
-      height: 30,
-      width: 30,
-      child: ShaderMask(
-        shaderCallback: (Rect bounds) {
-          return const RadialGradient(
-            center: Alignment.topLeft,
-            radius: 1.0,
-            colors: [Colors.yellow, Colors.red],
-            tileMode: TileMode.mirror,
-          ).createShader(bounds);
-        },
-        child: const FlutterLogo(),
-      ),
-    );
+
+    return child;
   }
 
   @override
@@ -415,14 +419,15 @@ class _ContentPageState extends State<_ContentPage> {
             top: _dy,
             child: Tooltip(
               message: 'Open ume panel',
-              child: GestureDetector(
-                onTap: onTap,
-                onVerticalDragEnd: dragEnd,
-                onHorizontalDragEnd: dragEnd,
-                onHorizontalDragUpdate: dragEvent,
-                onVerticalDragUpdate: dragEvent,
-                child: Container(
-                  decoration: const BoxDecoration(
+              child: RepaintBoundary(
+                child: GestureDetector(
+                  onTap: onTap,
+                  onVerticalDragEnd: dragEnd,
+                  onHorizontalDragEnd: dragEnd,
+                  onHorizontalDragUpdate: dragEvent,
+                  onVerticalDragUpdate: dragEvent,
+                  child: Container(
+                    decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.white,
                       boxShadow: [
@@ -430,24 +435,26 @@ class _ContentPageState extends State<_ContentPage> {
                             color: Colors.black12,
                             offset: Offset(0.0, 0.0),
                             blurRadius: 2.0,
-                            spreadRadius: 1.0)
-                      ]),
-                  width: dotSize.width,
-                  height: dotSize.height,
-                  child: Stack(
-                    children: [
-                      Center(
-                        child: _logoWidget(),
-                      ),
-                      Positioned(
-                        right: 6,
-                        top: 8,
-                        child: RedDot(
-                          pluginDatas:
-                              PluginManager.instance.pluginsMap.values.toList(),
+                            spreadRadius: 1.0,)
+                      ],
+                    ),
+                    width: dotSize.width,
+                    height: dotSize.height,
+                    child: Stack(
+                      children: [
+                        Center(
+                          child: _logoWidget(),
                         ),
-                      )
-                    ],
+                        Positioned(
+                          right: 6,
+                          top: 8,
+                          child: RedDot(
+                            pluginDatas:
+                                PluginManager.instance.pluginsMap.values.toList(),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),

@@ -14,8 +14,7 @@ import 'package:friflex_dev_plugins/util/constants.dart';
 
 class ToolBarWidget extends StatefulWidget {
   const ToolBarWidget(
-      {Key? key, this.action, this.maximalAction, this.closeAction})
-      : super(key: key);
+      {super.key, this.action, this.maximalAction, this.closeAction});
 
   final MenuAction? action;
   final CloseAction? closeAction;

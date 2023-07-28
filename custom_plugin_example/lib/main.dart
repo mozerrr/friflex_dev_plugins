@@ -71,11 +71,18 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                Text(
-                  _hasTapped ? 'Open \nCustomLog \nto view log' : 'Tap here 👉',
-                  style: Theme.of(context).textTheme.headlineMedium,
+                Padding(
+                  padding: EdgeInsets.only(
+                    bottom: MediaQuery.paddingOf(context).bottom,
+                  ),
+                  child: Text(
+                    _hasTapped
+                        ? 'Open \nCustomLog \nto view log'
+                        : 'Tap here 👉',
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
                 ),
-                const SizedBox(width: 80)
+                const SizedBox(width: 80),
               ],
             ),
           ),
