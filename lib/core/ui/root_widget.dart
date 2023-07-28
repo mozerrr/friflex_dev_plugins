@@ -205,7 +205,7 @@ class _ContentPage extends StatefulWidget {
 }
 
 class _ContentPageState extends State<_ContentPage> {
-  final PluginStoreManager _storeManager = PluginStoreManager();
+  final _storeManager = PluginStoreManager();
   late Size _windowSize;
   double _dx = 0;
   double _dy = 0;
@@ -232,9 +232,10 @@ class _ContentPageState extends State<_ContentPage> {
           MediaQuery.of(context).size.width - dotSize.width < x) {
         return;
       }
-      _dx = x;
-      _dy = y;
-      setState(() {});
+      setState(() {
+        _dx = x;
+        _dy = y;
+      });
     });
     _storeManager.fetchMinimalToolbarSwitch().then((value) {
       setState(() {
@@ -266,12 +267,13 @@ class _ContentPageState extends State<_ContentPage> {
         pluginData.onTrigger();
       }
     }
+
     _menuPage = MenuPage(
       action: itemTapAction,
       minimalAction: () {
         _minimalContent = true;
         _updatePanelWidget();
-        PluginStoreManager().storeMinimalToolbarSwitch(true);
+        _storeManager.storeMinimalToolbarSwitch(true);
       },
       closeAction: () {
         _showedMenu = false;
@@ -283,7 +285,7 @@ class _ContentPageState extends State<_ContentPage> {
       maximalAction: () {
         _minimalContent = false;
         _updatePanelWidget();
-        PluginStoreManager().storeMinimalToolbarSwitch(false);
+        _storeManager.storeMinimalToolbarSwitch(false);
       },
       closeAction: () {
         _showedMenu = false;
@@ -294,9 +296,10 @@ class _ContentPageState extends State<_ContentPage> {
   }
 
   void dragEvent(DragUpdateDetails details) {
-    _dx = details.globalPosition.dx - dotSize.width / 2;
-    _dy = details.globalPosition.dy - dotSize.height / 2;
-    setState(() {});
+    setState(() {
+      _dx = details.globalPosition.dx - dotSize.width / 2;
+      _dy = details.globalPosition.dy - dotSize.height / 2;
+    });
   }
 
   void dragEnd(DragEndDetails details) {
@@ -330,13 +333,14 @@ class _ContentPageState extends State<_ContentPage> {
     if (widget.refreshChildLayout != null) {
       widget.refreshChildLayout!();
     }
-    _currentSelected = null;
-    _currentWidget = const SizedBox.shrink();
-    if (_minimalContent) {
-      _currentWidget = _toolbarWidget;
-      _showedMenu = true;
-    }
-    setState(() {});
+    setState(() {
+      _currentSelected = null;
+      _currentWidget = const SizedBox.shrink();
+      if (_minimalContent) {
+        _currentWidget = _toolbarWidget;
+        _showedMenu = true;
+      }
+    });
   }
 
   void _updatePanelWidget() {
@@ -348,8 +352,8 @@ class _ContentPageState extends State<_ContentPage> {
   }
 
   void _handleAction(BuildContext? context, Pluggable data) {
-    _currentWidget = data.buildWidget(context);
     setState(() {
+      _currentWidget = data.buildWidget(context);
       _showedMenu = false;
     });
   }
