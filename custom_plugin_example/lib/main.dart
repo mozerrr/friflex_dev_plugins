@@ -37,11 +37,11 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _hasTapped = false;
 
   void _incrementCounter() {
-    CustomLog.log('Increase $_counter times.');
     setState(() {
       _hasTapped = true;
       _counter++;
     });
+    CustomLog.log('Increase $_counter times.');
   }
 
   @override
