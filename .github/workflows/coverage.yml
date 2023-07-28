@@ -7,9 +7,7 @@ on:
     paths:
       - "lib/**"
       - "kits/friflex_dev_plugins_console/lib/**"
-      - "kits/friflex_dev_plugins_device/lib/**"
       - "kits/friflex_dev_plugins_perf/lib/**"
-      - "kits/friflex_dev_plugins_show_code/lib/**"
       - "kits/friflex_dev_plugins_ui/lib/**"
       - "kits/friflex_dev_plugins_dio/lib/**"
     tags:
@@ -32,22 +30,14 @@ jobs:
           channel: "stable"
       - run: |
           flutter pub get
-          flutter pub run flutter_coverage_badge --exclude lib/util/flutter_logo.dart
-      - run: |
-          flutter pub get
           flutter pub run flutter_coverage_badge
-        working-directory: kits/friflex_dev_plugins_device
       - run: |
           flutter pub get
           flutter pub run flutter_coverage_badge
         working-directory: kits/friflex_dev_plugins_perf
       - run: |
           flutter pub get
-          flutter pub run flutter_coverage_badge --exclude lib/show_code/syntax_highlighter.dart
-        working-directory: kits/friflex_dev_plugins_show_code
-      - run: |
-          flutter pub get
-          flutter pub run flutter_coverage_badge --exclude lib/third_party/cyclop
+          flutter pub run flutter_coverage_badge
         working-directory: kits/friflex_dev_plugins_ui
       - run: |
           flutter pub get
@@ -59,8 +49,8 @@ jobs:
         working-directory: kits/friflex_dev_plugins_dio
       - name: Commit badges
         run: |
-          git config --global user.name smileShirely
-          git config --global user.email smileShirely@users.noreply.github.com
-          git add coverage_badge.svg kits/friflex_dev_plugins_device/coverage_badge.svg kits/friflex_dev_plugins_perf/coverage_badge.svg kits/friflex_dev_plugins_show_code/coverage_badge.svg kits/friflex_dev_plugins_ui/coverage_badge.svg kits/friflex_dev_plugins_console/coverage_badge.svg kits/friflex_dev_plugins_dio/coverage_badge.svg
+          git config --global user.name mozerrr
+          git config --global user.email mozerrr@users.noreply.github.com
+          git add coverage_badge.svg kits/friflex_dev_plugins_perf/coverage_badge.svg kits/friflex_dev_plugins_ui/coverage_badge.svg kits/friflex_dev_plugins_console/coverage_badge.svg kits/friflex_dev_plugins_dio/coverage_badge.svg
           git commit -m "Automated report coverage"
           git push
