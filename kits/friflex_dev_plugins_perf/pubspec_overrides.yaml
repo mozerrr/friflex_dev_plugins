@@ -2,5 +2,5 @@
 dependency_overrides:
   friflex_dev_plugins:
     path: ../..
-  friflex_dev_plugins_internal_vm_service_wrapper:
-    path: ../../internal/friflex_dev_plugins_internal_vm_service_wrapper
+  fdp_internal_vm_service_wrapper:
+    path: ../../internal/fdp_internal_vm_service_wrapper

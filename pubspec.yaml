@@ -1,6 +1,6 @@
 name: friflex_dev_plugins
-description: UME is an in-app debug kits platform for Flutter apps. Produced by Flutter Infra team of ByteDance.
-version: 1.0.0
+description: friflex_dev_plugins is an in-app debug kits platform for Flutter apps.
+version: 1.0.0-beta
 homepage: https://github.com/mozerrr/friflex_dev_plugins
 
 environment:

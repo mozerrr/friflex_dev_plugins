@@ -1,6 +1,6 @@
 name: friflex_dev_plugins_ui
 description: UI Kits for friflex_dev_plugins.
-version: 1.0.0
+version: 1.0.0-beta
 homepage: https://github.com/bytedance/friflex_dev_plugins
 
 environment:

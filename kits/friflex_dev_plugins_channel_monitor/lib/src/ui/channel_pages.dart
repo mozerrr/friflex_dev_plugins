@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:friflex_dev_plugins_channel_monitor/src/core/channel_info_model.dart';
-import 'package:friflex_dev_plugins_channel_monitor/src/core/ume_binary_messenger.dart';
+import 'package:friflex_dev_plugins_channel_monitor/src/core/fdp_binary_messenger.dart';
 import 'package:friflex_dev_plugins_channel_monitor/src/ui/template_ui.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -59,25 +59,28 @@ class _ChannelPagesState extends State<ChannelPages> {
     return TemplatePageWidget(
       title: 'Ordered Channels',
       body: StreamBuilder<List<String>>(
-          stream: channelStore.channelNamePublisher,
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            final List<String> channels = snapshot.data as List<String>;
-            return ListView.builder(
-                padding: EdgeInsets.zero,
-                itemCount: channels.length,
-                itemBuilder: (context, index) {
-                  return TemplateItemWidget(
-                      title: channels[index],
-                      onTap: () {
-                        currentChannel = channels[index];
-                        currentIndex = 1;
-                        setState(() {});
-                      });
-                });
-          }),
+        stream: channelStore.channelNamePublisher,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          final List<String> channels = snapshot.data as List<String>;
+          return ListView.builder(
+            padding: EdgeInsets.zero,
+            itemCount: channels.length,
+            itemBuilder: (context, index) {
+              return TemplateItemWidget(
+                title: channels[index],
+                onTap: () {
+                  currentChannel = channels[index];
+                  currentIndex = 1;
+                  setState(() {});
+                },
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }
@@ -88,11 +91,11 @@ class SingleChannelPage extends StatefulWidget {
   final OnChannelModelSelected onTap;
 
   const SingleChannelPage({
-    Key? key,
+    super.key,
     required this.title,
     required this.onBackPressed,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   State<SingleChannelPage> createState() => _SingleChannelPageState();
@@ -113,23 +116,25 @@ class _SingleChannelPageState extends State<SingleChannelPage> {
       onBackPressed: widget.onBackPressed,
       title: widget.title,
       body: StreamBuilder<List<ChannelInfoModel>>(
-          stream: _publisher,
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            final List<ChannelInfoModel> channels =
-                snapshot.data as List<ChannelInfoModel>;
-            return ListView.builder(
-                padding: EdgeInsets.zero,
-                itemCount: channels.length,
-                itemBuilder: (context, index) {
-                  return TemplateItemWidget(
-                    title: channels[index].methodName,
-                    onTap: () => widget.onTap(channels[index]),
-                  );
-                });
-          }),
+        stream: _publisher,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          final List<ChannelInfoModel> channels =
+              snapshot.data as List<ChannelInfoModel>;
+          return ListView.builder(
+            padding: EdgeInsets.zero,
+            itemCount: channels.length,
+            itemBuilder: (context, index) {
+              return TemplateItemWidget(
+                title: channels[index].methodName,
+                onTap: () => widget.onTap(channels[index]),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }
@@ -137,9 +142,12 @@ class _SingleChannelPageState extends State<SingleChannelPage> {
 class ChannelInfoPage extends StatelessWidget {
   final ChannelInfoModel? channelInfoModel;
   final VoidCallback onBackPressed;
-  const ChannelInfoPage(
-      {Key? key, this.channelInfoModel, required this.onBackPressed})
-      : super(key: key);
+
+  const ChannelInfoPage({
+    super.key,
+    this.channelInfoModel,
+    required this.onBackPressed,
+  });
 
   @override
   Widget build(BuildContext context) {

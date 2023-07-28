@@ -4,7 +4,7 @@ import 'package:friflex_dev_plugins/friflex_dev_plugins.dart';
 import 'custom_log.dart';
 
 void main() {
-  runApp(const UMEWidget(child: MyApp()));
+  runApp(const FriflexDevPluginsOverlay(child: MyApp()));
   PluginManager.instance.register(CustomLog());
 }
 

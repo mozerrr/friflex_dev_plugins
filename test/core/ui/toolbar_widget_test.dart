@@ -97,7 +97,8 @@ void main() {
           tester.getCenter(find.byWidgetPredicate((widget) {
         return widget is InkWell &&
             (widget.child is CircleAvatar) &&
-            (widget.child as CircleAvatar).backgroundColor == const Color(0xffff5a52);
+            (widget.child as CircleAvatar).backgroundColor ==
+                const Color(0xffff5a52);
       }));
       await tester.tapAt(closeBtnPosition);
       expect(closeTapped, isTrue);
@@ -106,7 +107,8 @@ void main() {
           tester.getCenter(find.byWidgetPredicate((widget) {
         return widget is InkWell &&
             (widget.child is CircleAvatar) &&
-            (widget.child as CircleAvatar).backgroundColor == const Color(0xff53c22b);
+            (widget.child as CircleAvatar).backgroundColor ==
+                const Color(0xff53c22b);
       }));
       await tester.tapAt(maximalBtnPosition);
       expect(maximalTapped, isTrue);

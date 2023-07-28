@@ -232,7 +232,7 @@ class __ToolBarContentState extends State<_ToolBarContent> {
                           color: const Color(0xffd0d0d0),
                           child: const Center(
                             child: Text(
-                              'UME',
+                              'Friflex dev plugins',
                               style: TextStyle(
                                 color: Color(0xff575757),
                                 fontSize: 14,

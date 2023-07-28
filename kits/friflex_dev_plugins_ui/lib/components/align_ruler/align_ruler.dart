@@ -131,12 +131,13 @@ class _AlignRulerState extends State<AlignRuler> {
     Widget toolBar = Container(
       width: MediaQuery.of(context).size.width - 32,
       decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            const BoxShadow(
-                color: Colors.black26, blurRadius: 6, offset: Offset(2, 2))
-          ]),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          const BoxShadow(
+              color: Colors.black26, blurRadius: 6, offset: Offset(2, 2))
+        ],
+      ),
       padding: const EdgeInsets.only(bottom: 16, top: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -150,12 +151,15 @@ class _AlignRulerState extends State<AlignRuler> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text('Left: ${_dotPosition.dx.toStringAsFixed(1)}',
-                          style: style),
-                      Padding(padding: const EdgeInsets.only(top: 8)),
                       Text(
-                          'Right: ${(_windowSize.width - _dotPosition.dx).toStringAsFixed(1)}',
-                          style: style),
+                        'Left: ${_dotPosition.dx.toStringAsFixed(1)}',
+                        style: style,
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        'Right: ${(_windowSize.width - _dotPosition.dx).toStringAsFixed(1)}',
+                        style: style,
+                      ),
                     ],
                   ),
                 ),
@@ -167,8 +171,9 @@ class _AlignRulerState extends State<AlignRuler> {
                           style: style),
                       Padding(padding: const EdgeInsets.only(top: 8)),
                       Text(
-                          'Bottom: ${(_windowSize.height - _dotPosition.dy).toStringAsFixed(1)}',
-                          style: style),
+                        'Bottom: ${(_windowSize.height - _dotPosition.dy).toStringAsFixed(1)}',
+                        style: style,
+                      ),
                     ],
                   ),
                 ),
@@ -193,9 +198,13 @@ class _AlignRulerState extends State<AlignRuler> {
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(left: 10),
-                    child: Text('开启后松手将会自动吸附至最近widget',
-                        style: const TextStyle(
-                            color: Colors.red, fontWeight: FontWeight.w500)),
+                    child: Text(
+                      'Auto snap',
+                      style: const TextStyle(
+                        color: Colors.red,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                   ),
                 )
               ],

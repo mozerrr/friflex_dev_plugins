@@ -68,7 +68,7 @@ class _MenuPageState extends State<MenuPage>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return ColoredBox(
       color: Colors.white,
       child: SafeArea(
         bottom: false,
@@ -114,7 +114,7 @@ class _MenuPageState extends State<MenuPage>
                     ],
                   ),
                   const Text(
-                    'UME',
+                    'Friflex dev plugins',
                     style: TextStyle(
                       fontSize: 60,
                       fontWeight: FontWeight.w800,

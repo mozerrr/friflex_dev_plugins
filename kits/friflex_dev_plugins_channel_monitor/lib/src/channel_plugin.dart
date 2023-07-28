@@ -11,14 +11,15 @@ class ChannelPlugin extends Pluggable {
   }
 
   @override
-  String get displayName => 'Channel Monitor';
+  String get displayName => 'ChannelMonitor';
 
   @override
-  ImageProvider<Object> get iconImageProvider =>
-      MemoryImage(base64Decode(icon.iconData));
+  ImageProvider<Object> get iconImageProvider => MemoryImage(
+        base64Decode(icon.iconData),
+      );
 
   @override
-  String get name => 'Channel Monitor';
+  String get name => 'ChannelMonitor';
 
   @override
   void onTrigger() {}

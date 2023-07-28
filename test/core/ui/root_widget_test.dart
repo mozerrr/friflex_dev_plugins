@@ -19,11 +19,11 @@ void main() {
 
   group('RootWidget', () {
     testWidgets('RootWidget assert constructor', (tester) async {
-      await tester.pumpWidget(UMEWidget(
+      await tester.pumpWidget(FriflexDevPluginsOverlay(
         enable: false,
         child: Container(),
       ));
-      expect(find.byType(UMEWidget), isOnstage);
+      expect(find.byType(FriflexDevPluginsOverlay), isOnstage);
       expect(find.byType(Container), isOnstage);
       expect(find.byType(Overlay), findsOneWidget);
     });
@@ -31,7 +31,7 @@ void main() {
     testWidgets('RootWidget pump widget', (tester) async {
       PluginManager.instance
           .registerAll([MockPluggable(), MockPluggableWithStream()]);
-      final umeRoot = UMEWidget(
+      final umeRoot = FriflexDevPluginsOverlay(
           enable: true,
           child: MaterialApp(
               home: Scaffold(
@@ -68,7 +68,7 @@ void main() {
         MockPluggableWithStream(),
         MockPluggableWithNestedWidget()
       ]);
-      final umeRoot = UMEWidget(
+      final umeRoot = FriflexDevPluginsOverlay(
           enable: true,
           child: MaterialApp(
               home: Scaffold(
@@ -87,7 +87,7 @@ void main() {
     testWidgets('RootWidget flutter logo drag', (tester) async {
       PluginManager.instance
           .registerAll([MockPluggable(), MockPluggableWithStream()]);
-      final umeRoot = UMEWidget(
+      final umeRoot = FriflexDevPluginsOverlay(
           enable: true,
           child: MaterialApp(
               home: Scaffold(
@@ -110,7 +110,7 @@ void main() {
     testWidgets('RootWidget flutter logo drag', (tester) async {
       PluginManager.instance
           .registerAll([MockPluggable(), MockPluggableWithStream()]);
-      final umeRoot = UMEWidget(
+      final umeRoot = FriflexDevPluginsOverlay(
           enable: true,
           child: MaterialApp(
               home: Scaffold(
@@ -130,7 +130,7 @@ void main() {
     testWidgets('RootWidget flutter logo tap', (tester) async {
       PluginManager.instance
           .registerAll([MockPluggable(), MockPluggableWithStream()]);
-      final umeRoot = UMEWidget(
+      final umeRoot = FriflexDevPluginsOverlay(
           enable: true,
           child: MaterialApp(
               home: Scaffold(
@@ -157,7 +157,7 @@ void main() {
       PluginManager.instance
           .registerAll([MockPluggable(), MockPluggableWithStream()]);
 
-      final umeRoot = UMEWidget(
+      final umeRoot = FriflexDevPluginsOverlay(
           enable: true,
           child: MaterialApp(
               home: Scaffold(
@@ -175,7 +175,8 @@ void main() {
           tester.getCenter(find.byWidgetPredicate((widget) {
         return widget is InkWell &&
             (widget.child is CircleAvatar) &&
-            (widget.child as CircleAvatar).backgroundColor == const Color(0xff53c22b);
+            (widget.child as CircleAvatar).backgroundColor ==
+                const Color(0xff53c22b);
       }));
       await tester.tapAt(maximalBtnPosition);
       await tester.pump(const Duration(seconds: 1));
@@ -190,7 +191,8 @@ void main() {
           tester.getCenter(find.byWidgetPredicate((widget) {
         return widget is InkWell &&
             (widget.child is CircleAvatar) &&
-            (widget.child as CircleAvatar).backgroundColor == const Color(0xffe6c029);
+            (widget.child as CircleAvatar).backgroundColor ==
+                const Color(0xffe6c029);
       }));
       await tester.tapAt(minimalBtnPosition);
       await tester.pump(const Duration(seconds: 1));
@@ -199,7 +201,8 @@ void main() {
           tester.getCenter(find.byWidgetPredicate((widget) {
         return widget is InkWell &&
             (widget.child is CircleAvatar) &&
-            (widget.child as CircleAvatar).backgroundColor == const Color(0xffff5a52);
+            (widget.child as CircleAvatar).backgroundColor ==
+                const Color(0xffff5a52);
       }));
       await tester.tapAt(closeBtnPosition);
       await tester.pump(const Duration(seconds: 1));
@@ -207,7 +210,7 @@ void main() {
 
     testWidgets('Build nested widget', (tester) async {
       PluginManager.instance.registerAll([MockPluggableWithNestedWidget()]);
-      final umeRoot = UMEWidget(
+      final umeRoot = FriflexDevPluginsOverlay(
           enable: true,
           child: MaterialApp(
               home: Scaffold(

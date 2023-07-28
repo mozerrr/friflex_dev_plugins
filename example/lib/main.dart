@@ -52,9 +52,9 @@ class _UMEAppState extends State<UMEApp> {
   Widget _buildApp(BuildContext context) {
     return MaterialApp(
       navigatorKey: navigatorKey,
-      title: 'UME Demo',
+      title: 'FDP Demo',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: HomePage(title: 'UME Demo Home Page'),
+      home: HomePage(title: 'FDP Demo Home Page'),
       onGenerateRoute: (settings) {
         switch (settings.name) {
           case 'detail':
@@ -74,7 +74,7 @@ class _UMEAppState extends State<UMEApp> {
         providers: [
           ChangeNotifierProvider(create: (_) => UMESwitch()),
         ],
-        builder: (BuildContext context, _) => UMEWidget(
+        builder: (BuildContext context, _) => FriflexDevPluginsOverlay(
           enable: context.watch<UMESwitch>().enable,
           child: body,
         ),

@@ -46,18 +46,26 @@ class _ColorSuckerState extends State<ColorSucker> {
   Matrix4 _matrix = Matrix4.identity();
   late Size _windowSize;
   bool _executing = false;
+  bool _initialized = false;
 
   @override
   void initState() {
     super.initState();
-    final window = View.of(context);
-    _windowSize = window.physicalSize / window.devicePixelRatio;
     _magnifierSize = widget.size;
     _scale = widget.scale;
     _radius = BorderRadius.circular(_magnifierSize.longestSide);
     _matrix = Matrix4.identity()..scale(widget.scale);
-    _magnifierPosition =
-        _windowSize.center(Offset.zero) - _magnifierSize.center(Offset.zero);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final window = View.of(context);
+    _windowSize = window.physicalSize / window.devicePixelRatio;
+    if (!_initialized) {
+      _magnifierPosition =
+          _windowSize.center(Offset.zero) - _magnifierSize.center(Offset.zero);
+    }
   }
 
   @override
@@ -208,14 +216,18 @@ class _ColorSuckerState extends State<ColorSucker> {
               onPanEnd: _onPanEnd,
               onPanUpdate: _onPanUpdate,
               child: BackdropFilter(
-                filter: ui.ImageFilter.matrix(_matrix.storage,
-                    filterQuality: FilterQuality.none,),
+                filter: ui.ImageFilter.matrix(
+                  _matrix.storage,
+                  filterQuality: FilterQuality.none,
+                ),
                 child: Center(
                   child: Container(
                     height: 1,
                     width: 1,
                     decoration: const BoxDecoration(
-                        color: Colors.grey, shape: BoxShape.circle,),
+                      color: Colors.grey,
+                      shape: BoxShape.circle,
+                    ),
                   ),
                 ),
               ),

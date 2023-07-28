@@ -22,8 +22,8 @@ const defaultLocalizationsDelegates = [
 final GlobalKey<OverlayState> overlayKey = GlobalKey<OverlayState>();
 
 /// Wrap your App widget. If [enable] is false, the function will return [child].
-class UMEWidget extends StatefulWidget {
-  const UMEWidget({
+class FriflexDevPluginsOverlay extends StatefulWidget {
+  const FriflexDevPluginsOverlay({
     Key? key,
     required this.child,
     this.enable = true,
@@ -38,34 +38,37 @@ class UMEWidget extends StatefulWidget {
 
   /// Close the activated plugin if any.
   ///
-  /// The method does not have side-effects whether the [UMEWidget]
+  /// The method does not have side-effects whether the [FriflexDevPluginsOverlay]
   /// is not enabled or no plugin has been activated.
   static void closeActivatedPlugin() {
     final _ContentPageState? state =
-        _umeWidgetState?._contentPageKey.currentState;
+        _fdpWidgetState?._contentPageKey.currentState;
     if (state?._currentSelected != null) {
       state?._closeActivatedPluggable();
     }
   }
 
   @override
-  _UMEWidgetState createState() => _UMEWidgetState();
+  _FriflexDevPluginsOverlayState createState() =>
+      _FriflexDevPluginsOverlayState();
 }
 
-/// Hold the [_UMEWidgetState] as a global variable.
-_UMEWidgetState? _umeWidgetState;
+/// Hold the [_FriflexDevPluginsOverlayState] as a global variable.
+_FriflexDevPluginsOverlayState? _fdpWidgetState;
 
-class _UMEWidgetState extends State<UMEWidget> {
-  _UMEWidgetState() {
+class _FriflexDevPluginsOverlayState extends State<FriflexDevPluginsOverlay> {
+  _FriflexDevPluginsOverlayState() {
     // Make sure only a single `UMEWidget` is being used.
     assert(
-      _umeWidgetState == null,
-      'Only one `UMEWidget` can be used at the same time.',
+      _fdpWidgetState == null,
+      'Only one `FriflexDevPluginsOverlay` can be used at the same time.',
     );
-    if (_umeWidgetState != null) {
-      throw StateError('Only one `UMEWidget` can be used at the same time.');
+    if (_fdpWidgetState != null) {
+      throw StateError(
+        'Only one `FriflexDevPluginsOverlay` can be used at the same time.',
+      );
     }
-    _umeWidgetState = this;
+    _fdpWidgetState = this;
   }
 
   final GlobalKey<_ContentPageState> _contentPageKey = GlobalKey();
@@ -99,7 +102,7 @@ class _UMEWidgetState extends State<UMEWidget> {
   }
 
   @override
-  void didUpdateWidget(UMEWidget oldWidget) {
+  void didUpdateWidget(FriflexDevPluginsOverlay oldWidget) {
     super.didUpdateWidget(oldWidget);
     widget.enable
         ? PluggableMessageService().resetListener()
@@ -122,7 +125,7 @@ class _UMEWidgetState extends State<UMEWidget> {
     }
     super.dispose();
     // Do the cleaning at last.
-    _umeWidgetState = null;
+    _fdpWidgetState = null;
   }
 
   void _replaceChild() {
@@ -381,17 +384,19 @@ class _ContentPageState extends State<_ContentPage> {
       child = SizedBox(
         height: 30,
         width: 30,
-        child: ShaderMask(
-          shaderCallback: (Rect bounds) {
-            return const RadialGradient(
-              center: Alignment.topLeft,
-              radius: 1.0,
-              colors: [Colors.yellow, Colors.red],
-              tileMode: TileMode.mirror,
-            ).createShader(bounds);
-          },
-          child: const FlutterLogo(),
-        ),
+        child: _showedMenu
+            ? ShaderMask(
+                shaderCallback: (Rect bounds) {
+                  return const RadialGradient(
+                    center: Alignment.topLeft,
+                    radius: 1.0,
+                    colors: [Colors.yellow, Colors.red],
+                    tileMode: TileMode.mirror,
+                  ).createShader(bounds);
+                },
+                child: const FlutterLogo(),
+              )
+            : const FlutterLogo(),
       );
     }
 
@@ -432,10 +437,11 @@ class _ContentPageState extends State<_ContentPage> {
                       color: Colors.white,
                       boxShadow: [
                         BoxShadow(
-                            color: Colors.black12,
-                            offset: Offset(0.0, 0.0),
-                            blurRadius: 2.0,
-                            spreadRadius: 1.0,)
+                          color: Colors.black12,
+                          offset: Offset(0.0, 0.0),
+                          blurRadius: 2.0,
+                          spreadRadius: 1.0,
+                        )
                       ],
                     ),
                     width: dotSize.width,
@@ -449,8 +455,9 @@ class _ContentPageState extends State<_ContentPage> {
                           right: 6,
                           top: 8,
                           child: RedDot(
-                            pluginDatas:
-                                PluginManager.instance.pluginsMap.values.toList(),
+                            pluginDatas: PluginManager
+                                .instance.pluginsMap.values
+                                .toList(),
                           ),
                         )
                       ],

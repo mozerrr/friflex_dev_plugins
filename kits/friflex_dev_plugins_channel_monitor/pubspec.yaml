@@ -1,6 +1,6 @@
 name: friflex_dev_plugins_channel_monitor
-description: channel monitor kit for friflex_dev_plugins
-version: 1.0.0
+description: Channel monitor kit for friflex_dev_plugins
+version: 0.0.1
 homepage: https://github.com/bytedance/friflex_dev_plugins
 
 environment:

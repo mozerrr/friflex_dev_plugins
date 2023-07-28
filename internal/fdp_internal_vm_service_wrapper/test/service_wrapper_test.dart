@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:friflex_dev_plugins_internal_vm_service_wrapper/friflex_dev_plugins_internal_vm_service_wrapper.dart';
+import 'package:fdp_internal_vm_service_wrapper/fdp_internal_vm_service_wrapper.dart';
 
 void main() {
   group('ServiceWrapper', () {

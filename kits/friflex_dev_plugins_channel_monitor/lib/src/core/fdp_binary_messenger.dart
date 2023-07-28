@@ -6,11 +6,13 @@ import 'package:flutter/services.dart';
 import 'package:friflex_dev_plugins_channel_monitor/src/core/channel_info_model.dart';
 import 'package:rxdart/rxdart.dart';
 
-// 在 _DefaultBinaryMessenger 的基础上增加数据监控
-class UmeBinaryMessenger extends BinaryMessenger {
-  static UmeBinaryMessenger binaryMessenger = UmeBinaryMessenger._();
+// _DefaultBinaryMessenger
+class FdpBinaryMessenger extends BinaryMessenger {
+  static FdpBinaryMessenger binaryMessenger = FdpBinaryMessenger._();
 
-  UmeBinaryMessenger._();
+  FdpBinaryMessenger._();
+
+  final _channelController = _ChannelController();
 
   @override
   Future<void> handlePlatformMessage(String channel, ByteData? data,
@@ -93,8 +95,8 @@ class _ChannelController {
 
   void trackChannelEvent(String channel, DateTime sendTime, bool send,
       {ByteData? data,
-        MessageHandler? handler,
-        ui.PlatformMessageResponseCallback? callback}) {
+      MessageHandler? handler,
+      ui.PlatformMessageResponseCallback? callback}) {
     MethodCall call = const MethodCall('unknown');
     try {
       call = codec.decodeMethodCall(data);
@@ -122,7 +124,7 @@ class _ChannelController {
 
 class ChannelStore {
   final BehaviorSubject<List<String>> _orderedChannelNamePublisher =
-  BehaviorSubject();
+      BehaviorSubject();
 
   final Map<String, List<ChannelInfoModel>> _orderedChannelEvents = {};
 
@@ -154,5 +156,3 @@ class ChannelStore {
 }
 
 ChannelStore channelStore = ChannelStore();
-
-_ChannelController _channelController = _ChannelController();

@@ -1,6 +1,6 @@
 name: friflex_dev_plugins_perf
 description: Performance kits for friflex_dev_plugins.
-version: 1.0.0
+version: 1.0.0-beta
 homepage: https://github.com/bytedance/friflex_dev_plugins
 
 environment:
@@ -11,8 +11,8 @@ dependencies:
   flutter:
     sdk: flutter
   friflex_dev_plugins: ^1.0.0
-  friflex_dev_plugins_internal_vm_service_wrapper:
-    path: ../../internal/friflex_dev_plugins_internal_vm_service_wrapper
+  fdp_internal_vm_service_wrapper:
+    path: ../../internal/fdp_internal_vm_service_wrapper
 
 dev_dependencies:
   flutter_test:

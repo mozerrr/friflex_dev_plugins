@@ -43,11 +43,9 @@ class CustomRouterPluggable implements PluggableWithAnywhereDoor {
   }
 
   @override
-  Route? get route =>
-      null; // or MaterialPageRoute(builder: (ctx) => DetailPage());
+  Route? get route => null;
 
   @override
   (String, Object?)? get routeNameAndArgs =>
       ('detail', {'arg': 'custom params'});
-//      null; // or Tuple2('DetailPage', null);
 }

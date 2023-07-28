@@ -55,6 +55,7 @@ void main() {
       toolbarAction() {
         a = 2;
       }
+
       final floatingWidget = FloatingWidget(
         toolbarActions: [('test', const Icon(Icons.search), toolbarAction)],
       );
@@ -76,6 +77,7 @@ void main() {
       closeAction() {
         a = 2;
       }
+
       final floatingWidget = FloatingWidget(
         closeAction: closeAction,
       );

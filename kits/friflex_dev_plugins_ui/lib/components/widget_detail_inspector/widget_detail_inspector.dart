@@ -109,8 +109,7 @@ class _DetailModel {
 }
 
 class _InfoPage extends StatefulWidget {
-  const _InfoPage({Key? key, required this.elements})
-      : super(key: key);
+  const _InfoPage({Key? key, required this.elements}) : super(key: key);
 
   final List<Element> elements;
 
@@ -241,8 +240,7 @@ class __InfoPageState extends State<_InfoPage> {
 }
 
 class _DetailContent extends StatelessWidget {
-  const _DetailContent({Key? key, required this.element})
-      : super(key: key);
+  const _DetailContent({Key? key, required this.element}) : super(key: key);
 
   final Element element;
 

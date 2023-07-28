@@ -50,16 +50,6 @@ class ConsoleState extends State<Console>
   RegExp? _filterExp;
 
   @override
-  void dispose() {
-    _subscription?.cancel();
-    _subscription = null;
-    _controller = null;
-    _showDateTimeStyle = ShowDateTimeStyle.datetime;
-    _showFilter = false;
-    super.dispose();
-  }
-
-  @override
   void initState() {
     super.initState();
     _showDateTimeStyle = ShowDateTimeStyle.none;
@@ -130,6 +120,16 @@ class ConsoleState extends State<Console>
   }
 
   @override
+  void dispose() {
+    _subscription?.cancel();
+    _subscription = null;
+    _controller = null;
+    _showDateTimeStyle = ShowDateTimeStyle.datetime;
+    _showFilter = false;
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return FloatingWidget(
       contentWidget: Container(
@@ -140,27 +140,37 @@ class ConsoleState extends State<Console>
               itemCount: _logList.length,
               itemBuilder: (BuildContext context, int index) {
                 return Padding(
-                  padding: const EdgeInsets.only(
-                      left: 8, right: 8, top: 3, bottom: 3),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                   child: RichText(
                     text: TextSpan(children: [
                       TextSpan(
-                          text: _dateTimeString(index),
-                          style: TextStyle(
-                            color: Colors.white60,
-                            fontFamily: 'Courier',
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                          )),
+                        text: _dateTimeString(index),
+                        style: TextStyle(
+                          color: Colors.white60,
+                          fontFamily: 'Courier',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
                       TextSpan(
-                          text:
-                              '${_logList[_logList.length - index - 1].$2}',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'Courier',
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                          )),
+                        text: ': ',
+                        style: TextStyle(
+                          color: Colors.white60,
+                          fontFamily: 'Courier',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      TextSpan(
+                        text: '${_logList[_logList.length - index - 1].$2}',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'Courier',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
                     ]),
                   ),
                 );
@@ -171,68 +181,70 @@ class ConsoleState extends State<Console>
                 left: 0,
                 right: 0,
                 top: 0,
-                child: Container(
-                  child: TextField(
-                    onChanged: (value) {
-                      if (value.isNotEmpty) {
-                        _filterExp = RegExp(value);
-                      } else {
-                        _filterExp = null;
-                      }
-                      setState(() {});
-                      _refreshConsole();
-                    },
-                    style: TextStyle(
-                      fontSize: 16,
-                    ),
-                    decoration: InputDecoration(
-                      fillColor: Colors.white,
-                      filled: true,
-                      hintText: 'RegExp',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(50),
-                        ),
+                child: TextField(
+                  onChanged: (value) {
+                    if (value.isNotEmpty) {
+                      _filterExp = RegExp(value);
+                    } else {
+                      _filterExp = null;
+                    }
+                    setState(() {});
+                    _refreshConsole();
+                  },
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                  decoration: InputDecoration(
+                    fillColor: Colors.white,
+                    filled: true,
+                    hintText: 'RegExp',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(50),
                       ),
-                      contentPadding: EdgeInsets.only(
-                        top: 0,
-                        bottom: 0,
-                      ),
-                      prefixIcon: Icon(Icons.search),
                     ),
+                    contentPadding: EdgeInsets.only(
+                      top: 0,
+                      bottom: 0,
+                    ),
+                    prefixIcon: Icon(Icons.search),
                   ),
                 ),
               ),
           ])),
       toolbarActions: [
         (
-            'Style',
-            Icon(
-              Icons.access_time,
-              size: 20,
-            ),
-            _triggerShowDate),
+          'Style',
+          Icon(
+            Icons.access_time,
+            size: 20,
+          ),
+          _triggerShowDate
+        ),
         (
-            'Clear',
-            Icon(
-              Icons.do_not_disturb,
-              size: 20,
-            ),
-            () => ConsoleManager.clearLog()),
+          'Clear',
+          Icon(
+            Icons.do_not_disturb,
+            size: 20,
+          ),
+          () => ConsoleManager.clearLog()
+        ),
         (
-            'Filter',
-            Icon(
-              Icons.search,
-              size: 20,
-            ),
-            _triggerFilter),
+          'Filter',
+          Icon(
+            Icons.search,
+            size: 20,
+          ),
+          _triggerFilter
+        ),
         (
-            'Share',
-            Icon(
-              Icons.share,
-              size: 20,
-            ),
-            _share),
+          'Share',
+          Icon(
+            Icons.share,
+            size: 20,
+          ),
+          _share
+        ),
       ],
     );
   }

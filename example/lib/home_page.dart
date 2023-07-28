@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextButton(
-              onPressed: () => UMEWidget.closeActivatedPlugin(),
+              onPressed: () => FriflexDevPluginsOverlay.closeActivatedPlugin(),
               child: const Text('Close activated plugin'),
             ),
             TextButton(
