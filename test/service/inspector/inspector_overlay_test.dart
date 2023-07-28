@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_ume/service/inspector/inspector_overlay.dart';
+import 'package:friflex_dev_plugins/service/inspector/inspector_overlay.dart';
 import '../../utils/mock_classes.dart';
 
 void main() {

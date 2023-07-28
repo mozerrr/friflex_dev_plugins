@@ -1,76 +1,76 @@
 import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_ume/core/pluggable_message_service.dart';
-import 'package:flutter_ume/core/plugin_manager.dart';
+import 'package:friflex_dev_plugins/core/pluggable_message_service.dart';
+import 'package:friflex_dev_plugins/core/plugin_manager.dart';
 
 import '../utils/mock_classes.dart';
 
 void main() {
   group('PluggableMessageService.', () {
-    PluggableMessageService? _service;
-    MockPluggableWithStream? _plugin;
+    PluggableMessageService? service0;
+    MockPluggableWithStream? plugin;
 
     setUp(() {
-      _service = PluggableMessageService();
-      _plugin = MockPluggableWithStream();
-      PluginManager.instance.register(_plugin!);
+      service0 = PluggableMessageService();
+      plugin = MockPluggableWithStream();
+      PluginManager.instance.register(plugin!);
     });
     test('constructor', () {
-      final service = _service;
+      final service = service0;
       expect(service, isNotNull);
     });
 
     test('streamController type is instance of StreamController.', () {
-      final streamController = _service!.messageStreamController;
+      final streamController = service0!.messageStreamController;
       expect(streamController, isInstanceOf<StreamController>());
     });
 
     test(
         'pluggableMessageData is instance of <Map<String, PluggableMessageInfo>>.',
         () {
-      final pluggableMessageData = _service!.pluggableMessageData;
+      final pluggableMessageData = service0!.pluggableMessageData;
       expect(pluggableMessageData,
           isInstanceOf<Map<String, PluggableMessageInfo>>());
     });
 
     test('A _plugin is registered just now, message count is 0.', () {
-      final count = _service!.count(_plugin!);
+      final count = service0!.count(plugin!);
       expect(count, 0);
     });
     test(
         'A _plugin is registered just now, increase counter, message count is 1.',
         () {
-      _service!.resetListener();
-      _service!.pluggableMessageData[_plugin!.name]!.increaseCounter();
-      final count = _service!.count(_plugin!);
+      service0!.resetListener();
+      service0!.pluggableMessageData[plugin!.name]!.increaseCounter();
+      final count = service0!.count(plugin!);
       expect(count, 1);
     });
     test(
         'A _plugin is registered just now, increase and reset counter, message count is 0.',
         () {
-      _service!.resetListener();
-      _service!.pluggableMessageData[_plugin!.name]!
+      service0!.resetListener();
+      service0!.pluggableMessageData[plugin!.name]!
         ..increaseCounter()
         ..resetCounter();
-      final count = _service!.count(_plugin!);
+      final count = service0!.count(plugin!);
       expect(count, 0);
     });
     test('A _plugin is registered just now, send a message.', () async {
-      _service!.resetListener();
-      _plugin!.streamController.sink.add('event');
-      final count = _service!.count(_plugin!);
+      service0!.resetListener();
+      plugin!.streamController.sink.add('event');
+      final count = service0!.count(plugin!);
       expect(count, 0);
     });
     test('Increase counter, reset counter, count is 0.', () async {
-      _service!.pluggableMessageData[_plugin!.name]!.increaseCounter();
-      _service!.resetCounter(_plugin!);
-      final count = _service!.count(_plugin!);
+      service0!.pluggableMessageData[plugin!.name]!.increaseCounter();
+      service0!.resetCounter(plugin!);
+      final count = service0!.count(plugin!);
       expect(count, 0);
     });
     test('Increase counter, count all.', () async {
-      _service!.pluggableMessageData[_plugin!.name]!.increaseCounter();
-      final count = _service!.countAll([_plugin]);
+      service0!.pluggableMessageData[plugin!.name]!.increaseCounter();
+      final count = service0!.countAll([plugin]);
       expect(count, 1);
     });
 

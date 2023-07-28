@@ -1,10 +1,10 @@
+// ignore_for_file: library_private_types_in_public_api
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_ume/flutter_ume.dart';
+import 'package:friflex_dev_plugins/friflex_dev_plugins.dart';
 
 class CustomLog implements Pluggable {
-
   @override
   Widget? buildWidget(BuildContext? context) => _buildLogPanel(context);
 
@@ -23,12 +23,13 @@ class CustomLog implements Pluggable {
     debugPrint('$name onTrigger');
   }
 
-  static List<String> _logList = <String>[];
+  static final List<String> _logList = <String>[];
+
   static List<String> get logList => _logList;
 
   static void log(String info) {
     _logList.add(info);
-    print(info);
+    debugPrint(info);
   }
 
   Widget _buildLogPanel(BuildContext? context) {
@@ -37,13 +38,13 @@ class CustomLog implements Pluggable {
       alignment: Alignment.bottomCenter,
       child: SizedBox(
           height: MediaQuery.of(context).size.height * 0.5,
-          child: LogViewerPage()),
+          child: const LogViewerPage()),
     );
   }
 }
 
 class LogViewerPage extends StatefulWidget {
-  LogViewerPage({Key? key}) : super(key: key);
+  const LogViewerPage({Key? key}) : super(key: key);
 
   @override
   _LogViewerPageState createState() => _LogViewerPageState();
@@ -54,16 +55,17 @@ class _LogViewerPageState extends State<LogViewerPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('CustomLog Viewer'),
+        title: const Text('CustomLog Viewer'),
       ),
       body: ListView.separated(
-          itemBuilder: (ctx, index) {
-            return ListTile(
-              title: Text('${CustomLog.logList[index]}'),
-            );
-          },
-          separatorBuilder: (ctx, index) => Divider(),
-          itemCount: CustomLog.logList.length),
+        itemBuilder: (ctx, index) {
+          return ListTile(
+            title: Text(CustomLog.logList[index]),
+          );
+        },
+        separatorBuilder: (ctx, index) => const Divider(),
+        itemCount: CustomLog.logList.length,
+      ),
     );
   }
 }

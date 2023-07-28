@@ -1,9 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_ume/core/pluggable.dart';
-import 'package:flutter_ume/core/plugin_manager.dart';
-import 'package:flutter_ume/core/store_manager.dart';
+import 'package:friflex_dev_plugins/core/pluggable.dart';
+import 'package:friflex_dev_plugins/core/plugin_manager.dart';
+import 'package:friflex_dev_plugins/core/store_manager.dart';
 
 import '../utils/mock_classes.dart';
 
@@ -11,8 +11,8 @@ void main() {
   group('PluginStoreManager.', () {
     setUp(() {
       WidgetsFlutterBinding.ensureInitialized();
-      final plugin0 = 'plugin0';
-      final plugin1 = 'plugin1';
+      const plugin0 = 'plugin0';
+      const plugin1 = 'plugin1';
 
       SharedPreferences.setMockInitialValues({
         'PluginStoreKey': [plugin0, plugin1],
@@ -27,8 +27,8 @@ void main() {
           isInstanceOf<Pluggable>());
     });
     test('store multiple plugins, expect count', () async {
-      final plugin0 = 'plugin0';
-      final plugin1 = 'plugin1';
+      const plugin0 = 'plugin0';
+      const plugin1 = 'plugin1';
 
       PluginStoreManager().storePlugins([plugin0, plugin1]);
 

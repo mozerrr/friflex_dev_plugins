@@ -1,15 +1,15 @@
+// ignore_for_file: library_private_types_in_public_api
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_ume/core/ui/panel_action_define.dart';
-import 'package:flutter_ume/util/constants.dart';
-import 'package:tuple/tuple.dart';
-import 'package:flutter_ume/util/store_mixin.dart';
+import 'package:friflex_dev_plugins/core/ui/panel_action_define.dart';
+import 'package:friflex_dev_plugins/util/constants.dart';
+import 'package:friflex_dev_plugins/util/store_mixin.dart';
 
 typedef ToolbarAction = void Function();
 
 class FloatingWidget extends StatefulWidget {
-  FloatingWidget({
+  const FloatingWidget({
     Key? key,
     this.contentWidget,
     this.closeAction,
@@ -19,7 +19,7 @@ class FloatingWidget extends StatefulWidget {
 
   final Widget? contentWidget;
   final CloseAction? closeAction;
-  final List<Tuple3<String, Widget, ToolbarAction>>? toolbarActions;
+  final List<(String, Widget, ToolbarAction)>? toolbarActions;
   final double minimalHeight;
 
   @override
@@ -30,7 +30,7 @@ const double _dragBarHeight = 32;
 const double _toolBarHeight = 32;
 
 class _FloatingWidgetState extends State<FloatingWidget> with StoreMixin {
-  Size _windowSize = windowSize;
+  late Size _windowSize;
   double _dy = 0;
   bool _fullScreen = false;
 
@@ -41,6 +41,8 @@ class _FloatingWidgetState extends State<FloatingWidget> with StoreMixin {
 
   @override
   void initState() {
+    super.initState();
+    _windowSize = windowSize(context);
     fetchWithKey('floating_widget').then((value) {
       if (value != null) {
         setState(() {
@@ -52,7 +54,6 @@ class _FloatingWidgetState extends State<FloatingWidget> with StoreMixin {
         widget.minimalHeight -
         _dragBarHeight -
         toolBarHeight;
-    super.initState();
   }
 
   void _dragEvent(DragUpdateDetails details) {
@@ -79,10 +80,12 @@ class _FloatingWidgetState extends State<FloatingWidget> with StoreMixin {
           MediaQuery.of(context).size.height - dotSize.height - bottomDistance;
       _windowSize = MediaQuery.of(context).size;
     }
-    return Container(
-        width: _windowSize.width,
-        height: _windowSize.height,
-        child: Stack(alignment: Alignment.center, children: <Widget>[
+    return SizedBox(
+      width: _windowSize.width,
+      height: _windowSize.height,
+      child: Stack(
+        alignment: Alignment.center,
+        children: <Widget>[
           Positioned(
             left: 0,
             top: _fullScreen ? 0 : _dy,
@@ -100,12 +103,14 @@ class _FloatingWidgetState extends State<FloatingWidget> with StoreMixin {
               toolbarActions: widget.toolbarActions,
             ),
           )
-        ]));
+        ],
+      ),
+    );
   }
 }
 
 class _ToolBarContent extends StatefulWidget {
-  _ToolBarContent(
+  const _ToolBarContent(
       {Key? key,
       this.contentWidget,
       this.dragCallback,
@@ -121,7 +126,7 @@ class _ToolBarContent extends StatefulWidget {
   final Function? dragEnd;
   final CloseAction? closeAction;
   final MaximalAction? maximalAction;
-  final List<Tuple3<String, Widget, ToolbarAction>>? toolbarActions;
+  final List<(String, Widget, ToolbarAction)>? toolbarActions;
   final double minimalHeight;
 
   @override
@@ -130,12 +135,18 @@ class _ToolBarContent extends StatefulWidget {
 
 class __ToolBarContentState extends State<_ToolBarContent> {
   bool _fullScreen = false;
-  Size _windowSize = windowSize;
+  late Size _windowSize;
 
   double get toolBarHeight =>
       (widget.toolbarActions != null && widget.toolbarActions!.isNotEmpty)
           ? _toolBarHeight
           : 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _windowSize = windowSize(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -145,13 +156,17 @@ class __ToolBarContentState extends State<_ToolBarContent> {
     const cornerRadius = Radius.circular(10);
     return SafeArea(
       child: Material(
-        borderRadius:
-            BorderRadius.only(topLeft: cornerRadius, topRight: cornerRadius),
+        borderRadius: const BorderRadius.only(
+          topLeft: cornerRadius,
+          topRight: cornerRadius,
+        ),
         elevation: 20,
         child: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             borderRadius: BorderRadius.only(
-                topLeft: cornerRadius, topRight: cornerRadius),
+              topLeft: cornerRadius,
+              topRight: cornerRadius,
+            ),
             color: Color(0xffd0d0d0),
           ),
           width: MediaQuery.of(context).size.width,
@@ -162,63 +177,61 @@ class __ToolBarContentState extends State<_ToolBarContent> {
             children: [
               Container(
                 height: _dragBarHeight,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 8, right: 8),
-                  child: Row(
-                    children: [
-                      InkWell(
-                          onTap: () {
-                            if (widget.closeAction != null) {
-                              widget.closeAction!();
-                            }
-                          },
-                          child: const CircleAvatar(
-                            radius: 10,
-                            backgroundColor: const Color(0xffff5a52),
-                          )),
-                      const SizedBox(
-                        width: 8,
+                padding: const EdgeInsets.only(left: 8, right: 8),
+                child: Row(
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        if (widget.closeAction != null) {
+                          widget.closeAction!();
+                        }
+                      },
+                      child: const CircleAvatar(
+                        radius: 10,
+                        backgroundColor: Color(0xffff5a52),
                       ),
-                      InkWell(
-                          onTap: () {
-                            if (widget.maximalAction != null) {
-                              widget.maximalAction!();
-                            }
-                            setState(() {
-                              _fullScreen = !_fullScreen;
-                            });
-                          },
-                          child: CircleAvatar(
-                            radius: 10,
-                            backgroundColor: _fullScreen
-                                ? const Color(0xffe6c029)
-                                : const Color(0xff53c22b),
-                          )),
-                      Expanded(
-                        child: GestureDetector(
-                          onVerticalDragUpdate: (details) =>
-                              _dragCallback(details),
-                          onVerticalDragEnd: (details) => _dragEnd(details),
-                          child: Container(
-                            height: _dragBarHeight,
-                            color: const Color(0xffd0d0d0),
-                            child: Center(
-                              child: Text(
-                                'UME',
-                                style: const TextStyle(
-                                    color: Color(0xff575757),
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600),
-                              ),
+                    ),
+                    const SizedBox(width: 8),
+                    InkWell(
+                      onTap: () {
+                        if (widget.maximalAction != null) {
+                          widget.maximalAction!();
+                        }
+                        setState(() {
+                          _fullScreen = !_fullScreen;
+                        });
+                      },
+                      child: CircleAvatar(
+                        radius: 10,
+                        backgroundColor: _fullScreen
+                            ? const Color(0xffe6c029)
+                            : const Color(0xff53c22b),
+                      ),
+                    ),
+                    Expanded(
+                      child: GestureDetector(
+                        onVerticalDragUpdate: (details) =>
+                            _dragCallback(details),
+                        onVerticalDragEnd: (details) => _dragEnd(details),
+                        child: Container(
+                          height: _dragBarHeight,
+                          color: const Color(0xffd0d0d0),
+                          child: const Center(
+                            child: Text(
+                              'UME',
+                              style: TextStyle(
+                                  color: Color(0xff575757),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600),
                             ),
                           ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
-              Container(
+              SizedBox(
                 height: _fullScreen
                     ? _windowSize.height -
                         _dragBarHeight -
@@ -239,21 +252,19 @@ class __ToolBarContentState extends State<_ToolBarContent> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: widget.toolbarActions!.map((tuple) {
-                        final title = tuple.item1;
-                        final widget = tuple.item2;
-                        final action = tuple.item3;
+                        final title = tuple.$1;
+                        final widget = tuple.$2;
+                        final action = tuple.$3;
                         return Padding(
                           padding: const EdgeInsets.only(left: 6, right: 6),
                           child: GestureDetector(
-                            child: Container(
-                              child: Row(
-                                children: [
-                                  widget,
-                                  Text(title),
-                                ],
-                              ),
-                            ),
                             onTap: action,
+                            child: Row(
+                              children: [
+                                widget,
+                                Text(title),
+                              ],
+                            ),
                           ),
                         );
                       }).toList(),

@@ -36,9 +36,9 @@ Or contact [author](mailto:sunkai.dev@bytedance.com).
 
 ## How to raise an Issue
 
-1. Go to [Issues](https://github.com/bytedance/flutter_ume/issues).
+1. Go to [Issues](https://github.com/bytedance/friflex_dev_plugins/issues).
 2. Search for similar situations, if there is a match, directly feedback in it.
-3. If there is not, press [New issue](https://github.com/bytedance/flutter_ume/issues/new/choose) to raise a new one.
+3. If there is not, press [New issue](https://github.com/bytedance/friflex_dev_plugins/issues/new/choose) to raise a new one.
 4. Select a template.
 5. Describe your situation, and fill in the template.
 6. It is better to attach a demo that can reproduce the problem.

@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.bytedance.flutter_ume_example">
+    package="com.bytedance.friflex_dev_plugins_example">
     <uses-permission android:name="android.permission.INTERNET" />
     <application
-        android:label="flutter_ume"
+        android:label="friflex_dev_plugins"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

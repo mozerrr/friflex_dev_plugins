@@ -1,7 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 mixin StoreMixin {
-  Future<SharedPreferences> _sharedPref = SharedPreferences.getInstance();
+  final _sharedPref = SharedPreferences.getInstance();
 
   /// Store a object with the [key]. The [obj] must be one of [bool], [double], [int], [String] or [List]<String>.
   Future<void> storeWithKey(String key, dynamic obj) async {

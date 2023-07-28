@@ -1,20 +1,18 @@
-import 'package:flutter_ume/flutter_ume.dart';
-import 'package:flutter_ume/core/pluggable.dart';
+import 'package:friflex_dev_plugins/friflex_dev_plugins.dart';
+import 'package:friflex_dev_plugins/core/pluggable.dart';
 
 class PluginManager {
   static PluginManager? _instance;
 
   Map<String, Pluggable?> get pluginsMap => _pluginsMap;
 
-  Map<String, Pluggable?> _pluginsMap = {};
+  final Map<String, Pluggable?> _pluginsMap = {};
 
   Pluggable? _activatedPluggable;
   String? get activatedPluggableName => _activatedPluggable?.name;
 
   static PluginManager get instance {
-    if (_instance == null) {
-      _instance = PluginManager._();
-    }
+    _instance ??= PluginManager._();
     return _instance!;
   }
 

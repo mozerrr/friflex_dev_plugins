@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_ume/core/ui/dragable_widget.dart';
+import 'package:friflex_dev_plugins/core/ui/dragable_widget.dart';
 
 void main() {
   group('DragableWidget', () {
@@ -8,7 +8,7 @@ void main() {
       int moveCount = 0;
 
       final redDot = DragableGridView(
-        ['TestA', 'TestB'],
+        const ['TestA', 'TestB'],
         childAspectRatio: 0.85,
         canAccept: (oldIndex, newIndex) {
           return true;

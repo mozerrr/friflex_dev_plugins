@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_ume/core/pluggable.dart';
-import 'package:flutter_ume/core/plugin_manager.dart';
+import 'package:friflex_dev_plugins/core/pluggable.dart';
+import 'package:friflex_dev_plugins/core/plugin_manager.dart';
 
 import '../utils/mock_classes.dart';
 

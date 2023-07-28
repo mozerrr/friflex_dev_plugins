@@ -1,5 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:tuple/tuple.dart';
 
 abstract class Pluggable {
   String get name;
@@ -23,7 +22,7 @@ abstract class PluggableWithNestedWidget extends Pluggable {
 abstract class PluggableWithAnywhereDoor extends Pluggable {
   NavigatorState? get navigator;
 
-  Tuple2<String, Object?>? get routeNameAndArgs;
+  (String, Object?)? get routeNameAndArgs;
   Route? get route;
 
   void popResultReceive(dynamic result);

@@ -1,11 +1,12 @@
+// ignore_for_file: library_private_types_in_public_api
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_ume/core/pluggable_message_service.dart';
-import 'package:flutter_ume/core/pluggable.dart';
+import 'package:friflex_dev_plugins/core/pluggable_message_service.dart';
+import 'package:friflex_dev_plugins/core/pluggable.dart';
 
 class RedDot extends StatefulWidget {
-  RedDot({Key? key, required this.pluginDatas, this.size = 16})
+  const RedDot({Key? key, required this.pluginDatas, this.size = 16})
       : super(key: key);
 
   final List<Pluggable?> pluginDatas;
@@ -52,10 +53,15 @@ class _RedDotState extends State<RedDot> {
   @override
   Widget build(BuildContext context) {
     if (_count == 0) {
-      return Container();
+      return const SizedBox.shrink();
     }
     return Container(
       height: widget.size,
+      decoration: ShapeDecoration(
+          color: Colors.red,
+          shape: RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.all(Radius.circular(widget.size * 0.5)))),
       child: Padding(
         padding: EdgeInsets.only(
             left: widget.size * 0.28, right: widget.size * 0.28),
@@ -68,11 +74,6 @@ class _RedDotState extends State<RedDot> {
           ),
         ),
       ),
-      decoration: ShapeDecoration(
-          color: Colors.red,
-          shape: RoundedRectangleBorder(
-              borderRadius:
-                  BorderRadius.all(Radius.circular(widget.size * 0.5)))),
     );
   }
 }

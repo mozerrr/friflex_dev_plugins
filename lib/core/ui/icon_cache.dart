@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ume/core/pluggable.dart';
+import 'package:friflex_dev_plugins/core/pluggable.dart';
 
 class IconCache {
-  static Map<String, Widget> _icons = Map();
+  static final Map<String, Widget> _icons = {};
   static Widget? icon({
     required Pluggable pluggableInfo,
   }) {

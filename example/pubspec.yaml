@@ -4,40 +4,36 @@ version: 1.0.1
 publish_to: none
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=3.10.0"
 
 dependencies:
   flutter:
     sdk: flutter
   provider: ^6.0.3
   # For Dio Kit
-  dio: ^4.0.0
+  dio: ^5.0.0
 
 dependency_overrides:
-  vm_service: ^9.4.0
-  flutter_ume:
+  friflex_dev_plugins:
     path: ../
 
 dev_dependencies:
   flutter_driver:
     sdk: flutter
-  test: ^1.16.6
-  flutter_ume:
+  test: ^1.22.0
+  friflex_dev_plugins:
     path: ../
-  flutter_ume_kit_ui:
-    path: ../kits/flutter_ume_kit_ui
-  flutter_ume_kit_perf:
-    path: ../kits/flutter_ume_kit_perf
-  flutter_ume_kit_show_code:
-    path: ../kits/flutter_ume_kit_show_code
-  flutter_ume_kit_device:
-    path: ../kits/flutter_ume_kit_device
-  flutter_ume_kit_console:
-    path: ../kits/flutter_ume_kit_console
-  flutter_ume_kit_dio:
-    path: ../kits/flutter_ume_kit_dio
-  flutter_ume_kit_channel_monitor:
-    path: ../kits/flutter_ume_kit_channel_monitor
+  friflex_dev_plugins_ui:
+    path: ../kits/friflex_dev_plugins_ui
+  friflex_dev_plugins_perf:
+    path: ../kits/friflex_dev_plugins_perf
+  friflex_dev_plugins_console:
+    path: ../kits/friflex_dev_plugins_console
+  friflex_dev_plugins_dio:
+    path: ../kits/friflex_dev_plugins_dio
+  friflex_dev_plugins_channel_monitor:
+    path: ../kits/friflex_dev_plugins_channel_monitor
 
 flutter:
   uses-material-design: true

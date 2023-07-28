@@ -15,7 +15,7 @@ class DragableGridView<T> extends StatefulWidget {
   final double childAspectRatio;
   final DragCompletion? dragCompletion;
 
-  DragableGridView(
+  const DragableGridView(
     this.dataList, {
     Key? key,
     this.scrollDirection = Axis.vertical,
@@ -47,10 +47,10 @@ class _DragableGridViewState<T> extends State<DragableGridView> {
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         padding: EdgeInsets.zero,
         itemCount: dataList!.length,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 3, childAspectRatio: 0.85),
         itemBuilder: ((ctx, index) {
           return _buildDraggable(ctx, index);
@@ -62,6 +62,46 @@ class _DragableGridViewState<T> extends State<DragableGridView> {
       builder: (context, constraint) {
         return LongPressDraggable(
           data: index,
+          onDragStarted: () {
+            draggingItemIndex = index;
+            dataListBackup = dataList!.sublist(0);
+          },
+          onDraggableCanceled: (Velocity velocity, Offset offset) {
+            setState(() {
+              willAcceptIndex = -1;
+              showItemWhenCovered = false;
+              dataList = dataListBackup.sublist(0);
+            });
+          },
+          onDragCompleted: () {
+            if (widget.dragCompletion != null) {
+              widget.dragCompletion!(dataList);
+            }
+            setState(() {
+              showItemWhenCovered = false;
+              willAcceptIndex = -1;
+            });
+          },
+          feedback: Container(
+            decoration: BoxDecoration(
+              boxShadow: const [
+                BoxShadow(
+                  blurRadius: 18,
+                  spreadRadius: 0.8,
+                  color: Colors.black87,
+                ),
+              ],
+              borderRadius: BorderRadius.circular(6),
+            ),
+            child: SizedBox(
+              width: constraint.maxWidth,
+              height: constraint.maxHeight,
+              child: widget.itemBuilder(context, dataList![index]),
+            ),
+          ),
+          childWhenDragging: showItemWhenCovered
+              ? widget.itemBuilder(context, dataList![index])
+              : null,
           child: DragTarget<int>(
             onAccept: (_) {},
             builder: (context, data, rejects) {
@@ -90,50 +130,6 @@ class _DragableGridViewState<T> extends State<DragableGridView> {
               }
               return accept;
             },
-          ),
-          onDragStarted: () {
-            draggingItemIndex = index;
-            dataListBackup = dataList!.sublist(0);
-          },
-          onDraggableCanceled: (Velocity velocity, Offset offset) {
-            setState(() {
-              willAcceptIndex = -1;
-              showItemWhenCovered = false;
-              dataList = dataListBackup.sublist(0);
-            });
-          },
-          onDragCompleted: () {
-            if (widget.dragCompletion != null) {
-              widget.dragCompletion!(dataList);
-            }
-            setState(() {
-              showItemWhenCovered = false;
-              willAcceptIndex = -1;
-            });
-          },
-          feedback: Container(
-            child: SizedBox(
-              width: constraint.maxWidth,
-              height: constraint.maxHeight,
-              child: widget.itemBuilder(context, dataList![index]),
-            ),
-            decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  blurRadius: 18,
-                  spreadRadius: 0.8,
-                  color: Colors.black87,
-                ),
-              ],
-              borderRadius: BorderRadius.circular(6),
-            ),
-          ),
-          childWhenDragging: Container(
-            child: SizedBox(
-              child: showItemWhenCovered
-                  ? widget.itemBuilder(context, dataList![index])
-                  : null,
-            ),
           ),
         );
       },
