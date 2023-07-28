@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'package:flutter_ume/core/plugin_manager.dart';
-import 'package:flutter_ume/core/pluggable.dart';
+import 'package:friflex_dev_plugins/core/plugin_manager.dart';
+import 'package:friflex_dev_plugins/core/pluggable.dart';
 
 class PluggableMessageService {
   static final PluggableMessageService _instance =
@@ -15,9 +15,9 @@ class PluggableMessageService {
 
   Map<String, PluggableMessageInfo> get pluggableMessageData =>
       _pluggableMessageData;
-  Map<String, PluggableMessageInfo> _pluggableMessageData = Map();
+  Map<String, PluggableMessageInfo> _pluggableMessageData = {};
   PluggableMessageService._internal() {
-    _pluggableMessageData = Map();
+    _pluggableMessageData = <String, PluggableMessageInfo>{};
   }
 
   void resetListener() {
@@ -58,9 +58,9 @@ class PluggableMessageService {
   }
 
   void clearListener() {
-    _pluggableMessageData.values.forEach((messageInfo) {
+    for (var messageInfo in _pluggableMessageData.values) {
       messageInfo.subscription?.cancel();
-    });
+    }
     _pluggableMessageData.clear();
   }
 
@@ -91,8 +91,8 @@ class PluggableMessageInfo {
 }
 
 class PluggableMessage {
-  int _count;
-  String _key;
+  final int _count;
+  final String _key;
   int get count => _count;
   String get key => _key;
   PluggableMessage.create(this._key, this._count);

@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_ume/core/plugin_manager.dart';
-import 'package:flutter_ume/core/ui/toolbar_widget.dart';
+import 'package:friflex_dev_plugins/core/plugin_manager.dart';
+import 'package:friflex_dev_plugins/core/ui/toolbar_widget.dart';
 
 import '../../utils/mock_classes.dart';
 
 void main() {
   group('ToolBarWidget', () {
     setUp(() {
-      final plugin0 = 'MockPluggable';
-      final plugin1 = 'MockPluggableWithStream';
+      const plugin0 = 'MockPluggable';
+      const plugin1 = 'MockPluggableWithStream';
       SharedPreferences.setMockInitialValues({
         'PluginStoreKey': [plugin0, plugin1],
         'maximalToolbarSwitch': true,
@@ -23,9 +23,9 @@ void main() {
           .registerAll([MockPluggable(), MockPluggableWithStream()]);
 
       final toolbarWidget = ToolBarWidget(
-        action: (pluggable) => null,
-        maximalAction: () => null,
-        closeAction: () => null,
+        action: (pluggable) {},
+        maximalAction: () {},
+        closeAction: () {},
       );
 
       await tester.pumpWidget(MaterialApp(
@@ -34,7 +34,7 @@ void main() {
           children: [toolbarWidget],
         ),
       )));
-      await tester.pump(Duration(seconds: 1));
+      await tester.pump(const Duration(seconds: 1));
       await tester.pumpAndSettle();
       expect(toolbarWidget, isNotNull);
     });
@@ -47,8 +47,8 @@ void main() {
 
       final toolbarWidget = ToolBarWidget(
         action: (pluggable) {},
-        maximalAction: () => null,
-        closeAction: () => null,
+        maximalAction: () {},
+        closeAction: () {},
       );
 
       await tester.pumpWidget(MaterialApp(
@@ -57,14 +57,14 @@ void main() {
           children: [toolbarWidget],
         ),
       )));
-      await tester.pump(Duration(seconds: 1));
+      await tester.pump(const Duration(seconds: 1));
       await tester.pumpAndSettle();
 
       final Offset toolBarHeaderPosition = tester.getCenter(find.text('UME'));
       final TestGesture longPressGesture =
           await tester.startGesture(toolBarHeaderPosition, pointer: 0);
       await tester.pump(const Duration(seconds: 1));
-      await longPressGesture.moveBy(Offset(-10, -10));
+      await longPressGesture.moveBy(const Offset(-10, -10));
       await longPressGesture.up();
       await tester.pump();
     });
@@ -90,14 +90,15 @@ void main() {
           children: [toolbarWidget],
         ),
       )));
-      await tester.pump(Duration(seconds: 1));
+      await tester.pump(const Duration(seconds: 1));
       await tester.pumpAndSettle();
 
       final Offset closeBtnPosition =
           tester.getCenter(find.byWidgetPredicate((widget) {
         return widget is InkWell &&
             (widget.child is CircleAvatar) &&
-            (widget.child as CircleAvatar).backgroundColor == Color(0xffff5a52);
+            (widget.child as CircleAvatar).backgroundColor ==
+                const Color(0xffff5a52);
       }));
       await tester.tapAt(closeBtnPosition);
       expect(closeTapped, isTrue);
@@ -106,7 +107,8 @@ void main() {
           tester.getCenter(find.byWidgetPredicate((widget) {
         return widget is InkWell &&
             (widget.child is CircleAvatar) &&
-            (widget.child as CircleAvatar).backgroundColor == Color(0xff53c22b);
+            (widget.child as CircleAvatar).backgroundColor ==
+                const Color(0xff53c22b);
       }));
       await tester.tapAt(maximalBtnPosition);
       expect(maximalTapped, isTrue);

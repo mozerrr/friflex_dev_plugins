@@ -1,0 +1,4 @@
+# melos_managed_dependency_overrides: friflex_dev_plugins
+dependency_overrides:
+  friflex_dev_plugins:
+    path: ../..

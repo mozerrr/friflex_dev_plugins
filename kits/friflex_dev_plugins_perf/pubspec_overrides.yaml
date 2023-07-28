@@ -1,0 +1,6 @@
+# melos_managed_dependency_overrides: friflex_dev_plugins
+dependency_overrides:
+  friflex_dev_plugins:
+    path: ../..
+  fdp_internal_vm_service_wrapper:
+    path: ../../internal/fdp_internal_vm_service_wrapper

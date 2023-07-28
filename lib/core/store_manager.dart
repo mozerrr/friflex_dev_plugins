@@ -5,14 +5,14 @@ class PluginStoreManager {
   final String _minimalToolbarSwitch = 'MinimalToolbarSwitch';
   final String _floatingDotPos = 'FloatingDotPos';
 
-  Future<SharedPreferences> _sharedPref = SharedPreferences.getInstance();
+  final _sharedPref = SharedPreferences.getInstance();
 
   Future<List<String>?> fetchStorePlugins() async {
     final SharedPreferences prefs = await _sharedPref;
     return prefs.getStringList(_pluginStoreKey);
   }
 
-  void storePlugins(List<String> plugins) async {
+  Future<void> storePlugins(List<String> plugins) async {
     if (plugins.isEmpty) {
       return;
     }
@@ -25,7 +25,7 @@ class PluginStoreManager {
     return prefs.getBool(_minimalToolbarSwitch);
   }
 
-  void storeMinimalToolbarSwitch(bool value) async {
+  Future<void> storeMinimalToolbarSwitch(bool value) async {
     final SharedPreferences prefs = await _sharedPref;
     await prefs.setBool(_minimalToolbarSwitch, value);
   }
@@ -35,8 +35,8 @@ class PluginStoreManager {
     return prefs.getString(_floatingDotPos);
   }
 
-  void storeFloatingDotPos(double x, double y) async {
+  Future<void> storeFloatingDotPos(double x, double y) async {
     final SharedPreferences prefs = await _sharedPref;
-    prefs.setString(_floatingDotPos, "$x,$y");
+    await prefs.setString(_floatingDotPos, "$x,$y");
   }
 }

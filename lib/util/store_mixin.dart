@@ -1,14 +1,14 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 mixin StoreMixin {
-  Future<SharedPreferences> _sharedPref = SharedPreferences.getInstance();
+  final _sharedPref = SharedPreferences.getInstance();
 
   /// Store a object with the [key]. The [obj] must be one of [bool], [double], [int], [String] or [List]<String>.
   Future<void> storeWithKey(String key, dynamic obj) async {
     if (obj == null) {
       return;
     }
-    final savedKey = 'ume_${runtimeType.toString}_$key';
+    final savedKey = 'fdp_${runtimeType.toString}_$key';
     final SharedPreferences prefs = await _sharedPref;
     if (obj is bool) {
       await prefs.setBool(savedKey, obj);
@@ -26,7 +26,7 @@ mixin StoreMixin {
   /// Fetch a object by the [key]
   Future<dynamic> fetchWithKey(String key) async {
     final SharedPreferences prefs = await _sharedPref;
-    final savedKey = 'ume_${runtimeType.toString}_$key';
+    final savedKey = 'fdp_${runtimeType.toString}_$key';
     return prefs.get(savedKey);
   }
 }

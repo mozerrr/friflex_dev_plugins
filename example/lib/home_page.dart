@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
-import 'package:example/ume_switch.dart';
+import 'package:example/fdp_switch.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ume/flutter_ume.dart';
+import 'package:friflex_dev_plugins/friflex_dev_plugins.dart';
 import 'package:provider/provider.dart';
 
 import 'main.dart';
@@ -23,8 +23,8 @@ class _HomePageState extends State<HomePage> {
         title: Text(widget.title!),
         actions: [
           IconButton(
-            onPressed: () => context.read<UMESwitch>().trigger(),
-            icon: Icon(context.read<UMESwitch>().enable
+            onPressed: () => context.read<FdpSwitch>().trigger(),
+            icon: Icon(context.read<FdpSwitch>().enable
                 ? Icons.light
                 : Icons.light_sharp),
           ),
@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextButton(
-              onPressed: () => UMEWidget.closeActivatedPlugin(),
+              onPressed: () => FriflexDevPluginsOverlay.closeActivatedPlugin(),
               child: const Text('Close activated plugin'),
             ),
             TextButton(

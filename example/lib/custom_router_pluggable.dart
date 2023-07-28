@@ -1,8 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_ume/flutter_ume.dart';
-import 'package:tuple/tuple.dart';
+import 'package:friflex_dev_plugins/friflex_dev_plugins.dart';
 import 'icon.dart' as icon;
 
 class CustomRouterPluggable implements PluggableWithAnywhereDoor {
@@ -44,11 +43,9 @@ class CustomRouterPluggable implements PluggableWithAnywhereDoor {
   }
 
   @override
-  Route? get route =>
-      null; // or MaterialPageRoute(builder: (ctx) => DetailPage());
+  Route? get route => null;
 
   @override
-  Tuple2<String, Object?>? get routeNameAndArgs =>
-      Tuple2('detail', {'arg': 'custom params'});
-//      null; // or Tuple2('DetailPage', null);
+  (String, Object?)? get routeNameAndArgs =>
+      ('detail', {'arg': 'custom params'});
 }

@@ -1,7 +1,7 @@
 name: byte_live_demo
 
 packages:
-  - kits/flutter_ume_kit_*
+  - kits/friflex_dev_plugins_*
   - example
   - custom_plugin_example
   - .

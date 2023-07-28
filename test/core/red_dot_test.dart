@@ -1,22 +1,22 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_ume/core/pluggable_message_service.dart';
-import 'package:flutter_ume/core/plugin_manager.dart';
-import 'package:flutter_ume/core/red_dot.dart';
+import 'package:friflex_dev_plugins/core/pluggable_message_service.dart';
+import 'package:friflex_dev_plugins/core/plugin_manager.dart';
+import 'package:friflex_dev_plugins/core/red_dot.dart';
 
 import '../utils/mock_classes.dart';
 
 void main() {
   group('RedDot', () {
     test('default constructor', () {
-      final redDot = RedDot(
+      const redDot = RedDot(
         pluginDatas: [],
       );
       expect(redDot, isNotNull);
     });
 
     testWidgets('empty container', (tester) async {
-      final redDot = RedDot(
+      const redDot = RedDot(
         pluginDatas: [],
       );
       await tester.pumpWidget(redDot);

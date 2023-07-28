@@ -1,20 +1,19 @@
-import 'package:flutter/material.dart'
-    hide FlutterLogo, FlutterLogoDecoration, FlutterLogoStyle;
-import 'package:flutter_ume/core/pluggable_message_service.dart';
-import 'package:flutter_ume/core/ui/panel_action_define.dart';
-import 'package:flutter_ume/core/plugin_manager.dart';
-import 'package:flutter_ume/core/red_dot.dart';
-import 'package:flutter_ume/core/store_manager.dart';
-import 'package:flutter_ume/core/ui/toolbar_widget.dart';
-import 'package:flutter_ume/core/pluggable.dart';
-import 'package:flutter_ume/util/binding_ambiguate.dart';
-import 'package:flutter_ume/util/constants.dart';
+// ignore_for_file: library_private_types_in_public_api
+import 'dart:ui';
+
+import 'package:flutter/material.dart';
+import 'package:friflex_dev_plugins/core/pluggable_message_service.dart';
+import 'package:friflex_dev_plugins/core/plugin_manager.dart';
+import 'package:friflex_dev_plugins/core/red_dot.dart';
+import 'package:friflex_dev_plugins/core/store_manager.dart';
+import 'package:friflex_dev_plugins/core/ui/toolbar_widget.dart';
+import 'package:friflex_dev_plugins/core/pluggable.dart';
+import 'package:friflex_dev_plugins/util/constants.dart';
 import './menu_page.dart';
-import 'package:flutter_ume/util/flutter_logo.dart';
 import 'global.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-const defaultLocalizationsDelegates = const [
+const defaultLocalizationsDelegates = [
   GlobalMaterialLocalizations.delegate,
   GlobalWidgetsLocalizations.delegate,
   GlobalCupertinoLocalizations.delegate,
@@ -23,8 +22,8 @@ const defaultLocalizationsDelegates = const [
 final GlobalKey<OverlayState> overlayKey = GlobalKey<OverlayState>();
 
 /// Wrap your App widget. If [enable] is false, the function will return [child].
-class UMEWidget extends StatefulWidget {
-  const UMEWidget({
+class FriflexDevPluginsOverlay extends StatefulWidget {
+  const FriflexDevPluginsOverlay({
     Key? key,
     required this.child,
     this.enable = true,
@@ -39,34 +38,37 @@ class UMEWidget extends StatefulWidget {
 
   /// Close the activated plugin if any.
   ///
-  /// The method does not have side-effects whether the [UMEWidget]
+  /// The method does not have side-effects whether the [FriflexDevPluginsOverlay]
   /// is not enabled or no plugin has been activated.
   static void closeActivatedPlugin() {
     final _ContentPageState? state =
-        _umeWidgetState?._contentPageKey.currentState;
+        _fdpWidgetState?._contentPageKey.currentState;
     if (state?._currentSelected != null) {
       state?._closeActivatedPluggable();
     }
   }
 
   @override
-  _UMEWidgetState createState() => _UMEWidgetState();
+  _FriflexDevPluginsOverlayState createState() =>
+      _FriflexDevPluginsOverlayState();
 }
 
-/// Hold the [_UMEWidgetState] as a global variable.
-_UMEWidgetState? _umeWidgetState;
+/// Hold the [_FriflexDevPluginsOverlayState] as a global variable.
+_FriflexDevPluginsOverlayState? _fdpWidgetState;
 
-class _UMEWidgetState extends State<UMEWidget> {
-  _UMEWidgetState() {
-    // Make sure only a single `UMEWidget` is being used.
+class _FriflexDevPluginsOverlayState extends State<FriflexDevPluginsOverlay> {
+  _FriflexDevPluginsOverlayState() {
+    // Make sure only a single `FriflexDevPluginsOverlay` is being used.
     assert(
-      _umeWidgetState == null,
-      'Only one `UMEWidget` can be used at the same time.',
+      _fdpWidgetState == null,
+      'Only one `FriflexDevPluginsOverlay` can be used at the same time.',
     );
-    if (_umeWidgetState != null) {
-      throw StateError('Only one `UMEWidget` can be used at the same time.');
+    if (_fdpWidgetState != null) {
+      throw StateError(
+        'Only one `FriflexDevPluginsOverlay` can be used at the same time.',
+      );
     }
-    _umeWidgetState = this;
+    _fdpWidgetState = this;
   }
 
   final GlobalKey<_ContentPageState> _contentPageKey = GlobalKey();
@@ -81,12 +83,10 @@ class _UMEWidgetState extends State<UMEWidget> {
   @override
   void initState() {
     super.initState();
-    _replaceChild();
     _injectOverlay();
 
-    _onMetricsChanged =
-        bindingAmbiguate(WidgetsBinding.instance)!.window.onMetricsChanged;
-    bindingAmbiguate(WidgetsBinding.instance)!.window.onMetricsChanged = () {
+    _onMetricsChanged = PlatformDispatcher.instance.onMetricsChanged;
+    PlatformDispatcher.instance.onMetricsChanged = () {
       if (_onMetricsChanged != null) {
         _onMetricsChanged!();
         _replaceChild();
@@ -96,18 +96,13 @@ class _UMEWidgetState extends State<UMEWidget> {
   }
 
   @override
-  void dispose() {
-    if (_onMetricsChanged != null) {
-      bindingAmbiguate(WidgetsBinding.instance)!.window.onMetricsChanged =
-          _onMetricsChanged;
-    }
-    super.dispose();
-    // Do the cleaning at last.
-    _umeWidgetState = null;
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _replaceChild();
   }
 
   @override
-  void didUpdateWidget(UMEWidget oldWidget) {
+  void didUpdateWidget(FriflexDevPluginsOverlay oldWidget) {
     super.didUpdateWidget(oldWidget);
     widget.enable
         ? PluggableMessageService().resetListener()
@@ -121,6 +116,16 @@ class _UMEWidgetState extends State<UMEWidget> {
     if (!widget.enable) {
       _removeOverlay();
     }
+  }
+
+  @override
+  void dispose() {
+    if (_onMetricsChanged != null) {
+      PlatformDispatcher.instance.onMetricsChanged = _onMetricsChanged;
+    }
+    super.dispose();
+    // Do the cleaning at last.
+    _fdpWidgetState = null;
   }
 
   void _replaceChild() {
@@ -147,12 +152,13 @@ class _UMEWidgetState extends State<UMEWidget> {
       Iterable<LocalizationsDelegate> delegates) {
     return Stack(
       children: <Widget>[
-        RepaintBoundary(child: child, key: rootKey),
+        RepaintBoundary(key: rootKey, child: child),
         MediaQuery(
-          data: MediaQueryData.fromWindow(
-              bindingAmbiguate(WidgetsBinding.instance)!.window),
+          data: MediaQueryData.fromView(
+            View.of(context),
+          ),
           child: Localizations(
-            locale: supportedLocales?.first ?? Locale('en', 'US'),
+            locale: supportedLocales?.first ?? const Locale('en', 'US'),
             delegates: delegates.toList(),
             child: ScaffoldMessenger(child: Overlay(key: overlayKey)),
           ),
@@ -170,7 +176,7 @@ class _UMEWidgetState extends State<UMEWidget> {
   }
 
   void _injectOverlay() {
-    bindingAmbiguate(WidgetsBinding.instance)?.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_overlayEntryInserted) {
         return;
       }
@@ -207,13 +213,12 @@ class _ContentPage extends StatefulWidget {
 }
 
 class _ContentPageState extends State<_ContentPage> {
-  PluginStoreManager _storeManager = PluginStoreManager();
-  Size _windowSize = windowSize;
+  final _storeManager = PluginStoreManager();
+  late Size _windowSize;
   double _dx = 0;
   double _dy = 0;
   bool _showedMenu = false;
   Pluggable? _currentSelected;
-  Widget _empty = Container();
   Widget? _currentWidget;
   Widget? _menuPage;
   BuildContext? _context;
@@ -221,27 +226,110 @@ class _ContentPageState extends State<_ContentPage> {
   bool _minimalContent = true;
   Widget? _toolbarWidget;
 
+  @override
+  void initState() {
+    super.initState();
+    _storeManager.fetchFloatingDotPos().then((value) {
+      if (value == null || value.split(',').length != 2) {
+        return;
+      }
+      final x = double.parse(value.split(',').first);
+      final y = double.parse(value.split(',').last);
+      if (MediaQuery.of(context).size.height - dotSize.height < y ||
+          MediaQuery.of(context).size.width - dotSize.width < x) {
+        return;
+      }
+      setState(() {
+        _dx = x;
+        _dy = y;
+      });
+    });
+    _storeManager.fetchMinimalToolbarSwitch().then((value) {
+      setState(() {
+        _minimalContent = value ?? true;
+      });
+    });
+    itemTapAction(pluginData) async {
+      if (pluginData is PluggableWithAnywhereDoor) {
+        dynamic result;
+        if (pluginData.routeNameAndArgs != null) {
+          result = await pluginData.navigator?.pushNamed(
+              pluginData.routeNameAndArgs!.$1,
+              arguments: pluginData.routeNameAndArgs!.$2);
+        } else if (pluginData.route != null) {
+          result = await pluginData.navigator?.push(pluginData.route!);
+        }
+        pluginData.popResultReceive(result);
+      } else {
+        _currentSelected = pluginData;
+        if (_currentSelected != null) {
+          PluginManager.instance.activatePluggable(_currentSelected!);
+        }
+        _handleAction(_context, pluginData!);
+        if (widget.refreshChildLayout != null) {
+          widget.refreshChildLayout!();
+        }
+        pluginData.onTrigger();
+      }
+    }
+
+    _menuPage = MenuPage(
+      action: itemTapAction,
+      minimalAction: () {
+        _minimalContent = true;
+        _updatePanelWidget();
+        _storeManager.storeMinimalToolbarSwitch(true);
+      },
+      closeAction: () {
+        _showedMenu = false;
+        _updatePanelWidget();
+      },
+    );
+    _toolbarWidget = ToolBarWidget(
+      action: itemTapAction,
+      maximalAction: () {
+        _minimalContent = false;
+        _updatePanelWidget();
+        _storeManager.storeMinimalToolbarSwitch(false);
+      },
+      closeAction: () {
+        _showedMenu = false;
+        _updatePanelWidget();
+      },
+    );
+    _currentWidget = const SizedBox.shrink();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _windowSize = windowSize(context);
+    _dx = _windowSize.width - dotSize.width - margin * 4;
+    _dy = _windowSize.height - dotSize.height - bottomDistance;
+  }
+
   void dragEvent(DragUpdateDetails details) {
-    _dx = details.globalPosition.dx - dotSize.width / 2;
-    _dy = details.globalPosition.dy - dotSize.height / 2;
-    setState(() {});
+    setState(() {
+      _dx = details.globalPosition.dx - dotSize.width / 2;
+      _dy = details.globalPosition.dy - dotSize.height / 2;
+    });
   }
 
   void dragEnd(DragEndDetails details) {
-    if (_dx + dotSize.width / 2 < _windowSize.width / 2) {
-      _dx = margin;
-    } else {
-      _dx = _windowSize.width - dotSize.width - margin;
-    }
-    if (_dy + dotSize.height > _windowSize.height) {
-      _dy = _windowSize.height - dotSize.height - margin;
-    } else if (_dy < 0) {
-      _dy = margin;
-    }
+    setState(() {
+      if (_dx + dotSize.width / 2 < _windowSize.width / 2) {
+        _dx = margin;
+      } else {
+        _dx = _windowSize.width - dotSize.width - margin;
+      }
+      if (_dy + dotSize.height > _windowSize.height) {
+        _dy = _windowSize.height - dotSize.height - margin;
+      } else if (_dy < 0) {
+        _dy = margin;
+      }
 
-    _storeManager.storeFloatingDotPos(_dx, _dy);
-
-    setState(() {});
+      _storeManager.storeFloatingDotPos(_dx, _dy);
+    });
   }
 
   void onTap() {
@@ -258,116 +346,61 @@ class _ContentPageState extends State<_ContentPage> {
     if (widget.refreshChildLayout != null) {
       widget.refreshChildLayout!();
     }
-    _currentSelected = null;
-    _currentWidget = _empty;
-    if (_minimalContent) {
-      _currentWidget = _toolbarWidget;
-      _showedMenu = true;
-    }
-    setState(() {});
+    setState(() {
+      _currentSelected = null;
+      _currentWidget = const SizedBox.shrink();
+      if (_minimalContent) {
+        _currentWidget = _toolbarWidget;
+        _showedMenu = true;
+      }
+    });
   }
 
   void _updatePanelWidget() {
     setState(() {
-      _currentWidget =
-          _showedMenu ? (_minimalContent ? _toolbarWidget : _menuPage) : _empty;
+      _currentWidget = _showedMenu
+          ? (_minimalContent ? _toolbarWidget : _menuPage)
+          : const SizedBox.shrink();
     });
   }
 
   void _handleAction(BuildContext? context, Pluggable data) {
-    _currentWidget = data.buildWidget(context);
     setState(() {
+      _currentWidget = data.buildWidget(context);
       _showedMenu = false;
     });
   }
 
   Widget _logoWidget() {
+    Widget child;
+
     if (_currentSelected != null) {
-      return Container(
-          child: Image(image: _currentSelected!.iconImageProvider),
-          height: 30,
-          width: 30);
+      child = SizedBox(
+        height: 30,
+        width: 30,
+        child: Image(image: _currentSelected!.iconImageProvider),
+      );
+    } else {
+      child = SizedBox(
+        height: 30,
+        width: 30,
+        child: _showedMenu
+            ? ShaderMask(
+                shaderCallback: (Rect bounds) {
+                  return const RadialGradient(
+                    center: Alignment.topLeft,
+                    radius: 1.0,
+                    colors: [Colors.yellow, Colors.red],
+                    tileMode: TileMode.mirror,
+                  ).createShader(bounds);
+                },
+                child: const FlutterLogo(),
+              )
+            : const FlutterLogo(),
+      );
     }
-    return FlutterLogo(size: 40, colors: _showedMenu ? Colors.red : null);
-  }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _storeManager.fetchFloatingDotPos().then((value) {
-      if (value == null || value.split(',').length != 2) {
-        return;
-      }
-      final x = double.parse(value.split(',').first);
-      final y = double.parse(value.split(',').last);
-      if (MediaQuery.of(context).size.height - dotSize.height < y ||
-          MediaQuery.of(context).size.width - dotSize.width < x) {
-        return;
-      }
-      _dx = x;
-      _dy = y;
-      setState(() {});
-    });
-    _storeManager.fetchMinimalToolbarSwitch().then((value) {
-      setState(() {
-        _minimalContent = value ?? true;
-      });
-    });
-    _dx = _windowSize.width - dotSize.width - margin * 4;
-    _dy = _windowSize.height - dotSize.height - bottomDistance;
-    MenuAction itemTapAction = (pluginData) async {
-      if (pluginData is PluggableWithAnywhereDoor) {
-        dynamic result;
-        if (pluginData.routeNameAndArgs != null) {
-          result = await pluginData.navigator?.pushNamed(
-              pluginData.routeNameAndArgs!.item1,
-              arguments: pluginData.routeNameAndArgs!.item2);
-        } else if (pluginData.route != null) {
-          result = await pluginData.navigator?.push(pluginData.route!);
-        }
-        pluginData.popResultReceive(result);
-      } else {
-        _currentSelected = pluginData;
-        if (_currentSelected != null) {
-          PluginManager.instance.activatePluggable(_currentSelected!);
-        }
-        _handleAction(_context, pluginData!);
-        if (widget.refreshChildLayout != null) {
-          widget.refreshChildLayout!();
-        }
-        pluginData.onTrigger();
-      }
-    };
-    _menuPage = MenuPage(
-      action: itemTapAction,
-      minimalAction: () {
-        _minimalContent = true;
-        _updatePanelWidget();
-        PluginStoreManager().storeMinimalToolbarSwitch(true);
-      },
-      closeAction: () {
-        _showedMenu = false;
-        _updatePanelWidget();
-      },
-    );
-    _toolbarWidget = ToolBarWidget(
-      action: itemTapAction,
-      maximalAction: () {
-        _minimalContent = false;
-        _updatePanelWidget();
-        PluginStoreManager().storeMinimalToolbarSwitch(false);
-      },
-      closeAction: () {
-        _showedMenu = false;
-        _updatePanelWidget();
-      },
-    );
-    _currentWidget = _empty;
+    return child;
   }
 
   @override
@@ -379,7 +412,7 @@ class _ContentPageState extends State<_ContentPage> {
           MediaQuery.of(context).size.height - dotSize.height - bottomDistance;
       _windowSize = MediaQuery.of(context).size;
     }
-    return Container(
+    return SizedBox(
       width: _windowSize.width,
       height: _windowSize.height,
       child: Stack(
@@ -390,40 +423,45 @@ class _ContentPageState extends State<_ContentPage> {
             left: _dx,
             top: _dy,
             child: Tooltip(
-              message: 'Open ume panel',
-              child: GestureDetector(
-                onTap: onTap,
-                onVerticalDragEnd: dragEnd,
-                onHorizontalDragEnd: dragEnd,
-                onHorizontalDragUpdate: dragEvent,
-                onVerticalDragUpdate: dragEvent,
-                child: Container(
-                  decoration: const BoxDecoration(
+              message: 'Open dev plugins panel',
+              child: RepaintBoundary(
+                child: GestureDetector(
+                  onTap: onTap,
+                  onVerticalDragEnd: dragEnd,
+                  onHorizontalDragEnd: dragEnd,
+                  onHorizontalDragUpdate: dragEvent,
+                  onVerticalDragUpdate: dragEvent,
+                  child: Container(
+                    decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.white,
                       boxShadow: [
-                        const BoxShadow(
-                            color: Colors.black12,
-                            offset: Offset(0.0, 0.0),
-                            blurRadius: 2.0,
-                            spreadRadius: 1.0)
-                      ]),
-                  width: dotSize.width,
-                  height: dotSize.height,
-                  child: Stack(
-                    children: [
-                      Center(
-                        child: _logoWidget(),
-                      ),
-                      Positioned(
+                        BoxShadow(
+                          color: Colors.black12,
+                          offset: Offset(0.0, 0.0),
+                          blurRadius: 2.0,
+                          spreadRadius: 1.0,
+                        )
+                      ],
+                    ),
+                    width: dotSize.width,
+                    height: dotSize.height,
+                    child: Stack(
+                      children: [
+                        Center(
+                          child: _logoWidget(),
+                        ),
+                        Positioned(
                           right: 6,
                           top: 8,
                           child: RedDot(
                             pluginDatas: PluginManager
                                 .instance.pluginsMap.values
                                 .toList(),
-                          ))
-                    ],
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),

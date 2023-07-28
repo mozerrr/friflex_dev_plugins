@@ -1,27 +1,30 @@
+// ignore_for_file: library_private_types_in_public_api
 import 'package:flutter/material.dart';
-import 'package:flutter_ume/flutter_ume.dart';
+import 'package:friflex_dev_plugins/friflex_dev_plugins.dart';
 import 'custom_log.dart';
 
 void main() {
-  runApp(UMEWidget(child: MyApp()));
-  PluginManager.instance..register(CustomLog());
+  runApp(const FriflexDevPluginsOverlay(child: MyApp()));
+  PluginManager.instance.register(CustomLog());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'UME Demo',
+      title: 'Friflex dev plugins Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'UME Demo Home Page'),
+      home: const MyHomePage(title: 'Friflex dev plugins Demo Home Page'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
+  const MyHomePage({super.key, required this.title});
 
   final String title;
 
@@ -34,11 +37,11 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _hasTapped = false;
 
   void _incrementCounter() {
-    CustomLog.log('Increase $_counter times.');
     setState(() {
       _hasTapped = true;
       _counter++;
     });
+    CustomLog.log('Increase $_counter times.');
   }
 
   @override
@@ -53,35 +56,42 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text(
+                const Text(
                   'You have pushed the button this many times:',
                 ),
                 Text(
                   '$_counter',
-                  style: Theme.of(context).textTheme.headline4,
+                  style: Theme.of(context).textTheme.headlineMedium,
                 ),
               ],
             ),
           ),
           Align(
-              alignment: Alignment.bottomRight,
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    Text(
-                      _hasTapped
-                          ? 'Open \nCustomLog \nto view log'
-                          : 'Tap here 👉',
-                      style: Theme.of(context).textTheme.headline4,
-                    ),
-                    SizedBox(width: 80)
-                  ])),
+            alignment: Alignment.bottomRight,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(
+                    bottom: MediaQuery.paddingOf(context).bottom,
+                  ),
+                  child: Text(
+                    _hasTapped
+                        ? 'Open \nCustomLog \nto view log'
+                        : 'Tap here 👉',
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
+                ),
+                const SizedBox(width: 80),
+              ],
+            ),
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }
